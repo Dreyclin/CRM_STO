@@ -5,3 +5,16 @@
 .h-8 {
     height: 80vh!important;
 }
+
+.w-15 {
+    max-width: 15%;
+}
+
+.container {
+    max-width: 90%!important;
+    margin: 0 auto!important;
+}
+
+li:not(.active):hover {
+    cursor: pointer;
+}
