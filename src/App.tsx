@@ -1,18 +1,14 @@
 import List from "./components/List/List";
 import Header from "./components/Header/Header";
+import Clients from "./components/Clients/Clients";
 
 function App() {
   return (
     <div className="">
-      <Header title={"Запись"} />
-      <div className="d-flex justify-content-between">
+      <Header title={"Клиенты"} />
+      <div className="d-flex container gap-5">
         <List />
-        <div className="container w-50">
-          <div className="btn-group">
-            <button className="btn btn-primary active">Active</button>
-            <button className="btn btn-primary">Non Active</button>
-          </div>
-        </div>
+        <Clients />
       </div>
     </div>
   );

@@ -18,3 +18,7 @@
 li:not(.active):hover {
     cursor: pointer;
 }
+
+.list-width {
+    width: 15rem;
+}
