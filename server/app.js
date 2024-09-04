@@ -4,6 +4,9 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+const bcrypt = require('bcrypt')
+const salt = 10;
+
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -20,18 +23,38 @@ app.get('/', (req, res) => {
     console.log("Hello!");
 })
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
+    const email = req.body.email;
+    const plainPassword = req.body.password;
 
+    try {
+        const user = await User.findOne({ email: email })
+        if (user) {
+            const hashedPassword = user.password
+            console.log(hashedPassword);
+            const isMatch = await bcrypt.compare(plainPassword, hashedPassword)
+            if (isMatch) {
+                console.log("CONGRATS!");
+            } else {
+                console.log("Failed!");
+            }
+        } else {
+            console.log("No such a user!");
+        }
+    } catch (error) {
+        console.log(error);
+    }
 })
 
-app.post('/reg', (req, res) => {
-
+app.post('/reg', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    const hashedPass = await bcrypt.hash(password, salt);
+
     const newUser = new User({
         email: email,
-        password: password
+        password: hashedPass
     })
 
     newUser.save().then(() => {
