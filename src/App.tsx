@@ -7,7 +7,7 @@ import { RouterProvider } from "react-router-dom";
 function App() {
   
   const router = useRouter();
-  
+
   return (
     <RouterProvider router={router} />
     // <div className="">
