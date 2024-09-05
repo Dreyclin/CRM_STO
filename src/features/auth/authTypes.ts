@@ -1,7 +1,8 @@
 export interface User {
     id: string,
     email: string,
-    password: string
+    password: string,
+    isActive: Boolean
 }
 
 export interface AuthState {
