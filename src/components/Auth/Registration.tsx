@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "../Header/Header";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../features/auth/authThunks";
 import { AppDispatch, RootState } from "../../app/store";
@@ -10,13 +10,18 @@ const Registration: React.FC = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const dispatch: AppDispatch = useDispatch();
-
+    const navigate = useNavigate();
     const { error } = useSelector((state: RootState) => state.auth);
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (password === confirmPassword)
+        if (password === confirmPassword) {
             dispatch(registerUser({ email, password, confirmPassword }))
+            if (!error) {
+                navigate('/');
+            }
+
+        }
         else
             alert("Passwords do not match!");
     }

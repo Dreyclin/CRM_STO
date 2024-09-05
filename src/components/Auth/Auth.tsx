@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../features/auth/authThunks";
@@ -9,12 +9,20 @@ export default function Auth() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch: AppDispatch = useDispatch();
-    
+    const navigate = useNavigate();
     const {error} = useSelector((state: RootState) => state.auth);
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        dispatch(loginUser({email, password}));
+        dispatch(loginUser({email, password})).then(() => {
+            if(!error) {
+                console.log(error);
+                navigate('/control')
+            } else {
+                console.log(error);
+            }
+        })
+   
     }
 
     return (
