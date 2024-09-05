@@ -23,8 +23,8 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = "failed"
-                if (action.error && action.error.message)
-                    state.error = action.error.message
+                if (action.payload)
+                    state.error = action.payload
                 else
                     state.error = "Something went wrong"
             })
