@@ -18,12 +18,11 @@ export default function useRouter() {
     },
     {
       path: "/",
-      element: <ProtectedRoute />, // Вложенные маршруты будут защищены
-      children: [
-        {
-          path: "/control",
-          element: <ControlPage />
-        }
+      element: <ProtectedRoute />,
+      children: [{
+        path: "/control",
+        element: <ControlPage />
+      }
       ]
     }
   ])

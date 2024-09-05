@@ -10,7 +10,10 @@ const session = require('express-session');
 const bcrypt = require('bcrypt')
 const salt = 10;
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use(session({
     secret: 'yourSecretKey',
     resave: false,
@@ -67,7 +70,6 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', (req, res, next) => {
-    console.log(res);
     passport.authenticate('local', (err, user, info) => {
         if (err) {
             return res.status(500).json({ message: 'Ошибка сервера' });
@@ -79,10 +81,18 @@ app.post('/login', (req, res, next) => {
             if (err) {
                 return res.status(500).json({ message: 'Ошибка входа' });
             }
-            return res.status(200).json({ message: 'Вход успешен', user });
+            return res.status(200).json(user);
         });
     })(req, res, next);
 });
+
+app.post('/checkAuth', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ authenticated: true, user: req.user });
+      } else {
+        res.json({ authenticated: false });
+      }
+})
 
 // try {
 //     const user = await User.findOne({ email: email })
