@@ -63,7 +63,21 @@ const userSchema = mongoose.Schema({
     password: String
 })
 
+const recordSchema = mongoose.Schema({
+    time: String,
+    tag: String,
+    title: String,
+    description: String
+})
+
+const autoServiceSchema = mongoose.Schema({
+    users: [userSchema],
+    records: [recordSchema]
+})
+
 const User = mongoose.model("User", userSchema);
+const AutoService = mongoose.model("AutoService", autoServiceSchema);
+const Record = mongoose.model("Record", recordSchema);
 
 app.get('/', (req, res) => {
     console.log("Hello!");
@@ -86,31 +100,13 @@ app.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
-app.post('/checkAuth', (req, res) => {
+app.get('/checkAuth', (req, res) => {
     if (req.isAuthenticated()) {
         res.json({ authenticated: true, user: req.user });
       } else {
         res.json({ authenticated: false });
       }
 })
-
-// try {
-//     const user = await User.findOne({ email: email })
-//     if (user) {
-//         const hashedPassword = user.password
-//         console.log(hashedPassword);
-//         const isMatch = await bcrypt.compare(plainPassword, hashedPassword)
-//         if (isMatch) {
-//             console.log("CONGRATS!");
-//         } else {
-//             console.log("Failed!");
-//         }
-//     } else {
-//         console.log("No such a user!");
-//     }
-// } catch (error) {
-//     console.log(error);
-// }
 
 app.post('/reg', async (req, res) => {
     const email = req.body.email;
