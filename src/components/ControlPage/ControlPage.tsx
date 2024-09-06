@@ -9,6 +9,8 @@ const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
     const userName = useSelector((state: RootState) => state.auth.user?.email)
     
+    
+
     return (
         <div className="">
             <Header title={title} welcome={userName}/>

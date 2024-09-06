@@ -4,33 +4,46 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../features/auth/authThunks";
+import { checkAuth } from "../../features/auth/authService";
 
 export default function Auth() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
-    const {error} = useSelector((state: RootState) => state.auth);
+    const { error } = useSelector((state: RootState) => state.auth);
+    const user = useSelector((state: RootState) => state.auth.user);
+
+    useEffect(() => {
+        async function fetchData() {
+            console.log(user);
+            if(user){
+                const data = await checkAuth(user);
+                console.log(data);
+            }
+        }
+        fetchData();
+    }, [])
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        dispatch(loginUser({email, password})).then(() => {
-            console.log(error);
-            if(!error) {
-                navigate("/control")
-            } else {
-                console.log(error);
-            }
-        })
+        dispatch(loginUser({ email, password }))
+            .unwrap()
+            .then(() => {
+                navigate("/control");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     return (
         <div className="">
             {error && <p className="h1 text-center fw-bold">{error}</p>}
-            <Header title={"AutoService CRM"} welcome={undefined}/>
+            <Header title={"AutoService CRM"} welcome={undefined} />
             <form onSubmit={handleSubmit} action="" className="d-flex flex-column w-100 h-8 justify-content-center align-items-center gap-4">
-                <input type="text" className="form-control w-25 py-3" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}/>
-                <input type="text" className="form-control w-25 py-3" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)}/>
+                <input type="text" className="form-control w-25 py-3" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+                <input type="text" className="form-control w-25 py-3" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)} />
                 <div className="btn-container d-flex gap-4">
                     <button type="submit" className="btn btn-success py-3 px-4 fw-bold">Войти</button>
                     <NavLink to={"/registration"} className="btn btn-primary py-3 px-4 fw-bold">Зарегистрироваться</NavLink>
