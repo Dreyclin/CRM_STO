@@ -17,7 +17,7 @@ const ControlPage: React.FC = () => {
         dispatch(checkAuth()).unwrap().catch(() => {
             navigate('/');
         })
-    })
+    }, [])
 
     return (
         <div className="">

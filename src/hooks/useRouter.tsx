@@ -4,7 +4,6 @@ import {
 import Auth from "../components/Auth/Auth";
 import Registration from "../components/Auth/Registration";
 import ControlPage from "../components/ControlPage/ControlPage";
-import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function useRouter() {
   const router = createBrowserRouter([
@@ -17,14 +16,8 @@ export default function useRouter() {
       element: <Registration />
     },
     {
-      path: "/",
-      element: <ProtectedRoute />, // Вложенные маршруты будут защищены
-      children: [
-        {
-          path: "/control",
-          element: <ControlPage />
-        }
-      ]
+      path: "/control",
+      element: <ControlPage /> // Вложенные маршруты будут защищены
     }
   ])
 

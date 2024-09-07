@@ -20,19 +20,17 @@ export const loginUser = createAsyncThunk<LoginResponse, LoginCredentials, {reje
 
 export const checkAuth = createAsyncThunk(
     'auth/checkAuth',
-    async() => {
+    async(_, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
-            console.log(token);
             if(!token) throw new Error ("Нет токена!");
 
-            const response = await axios.post('http://localhost:5000/checkAuth', {}, {
+            const response = await axios.post<User>('http://localhost:5000/checkAuth', {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(response.data);
             return response.data;
         } catch (error: any) {
-            return isRejectedWithValue(error.response.data.message);
+            return thunkAPI.rejectWithValue(error.response.data.message);
         }
     }
 )
