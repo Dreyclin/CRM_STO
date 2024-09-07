@@ -16,8 +16,18 @@ export default function useRouter() {
       element: <Registration />
     },
     {
+<<<<<<< HEAD
       path: "/control",
       element: <ControlPage /> // Вложенные маршруты будут защищены
+=======
+      path: "/",
+      element: <ProtectedRoute />,
+      children: [{
+        path: "/control",
+        element: <ControlPage />
+      }
+      ]
+>>>>>>> cae365874edba02897930e786b56539144be80bb
     }
   ])
 

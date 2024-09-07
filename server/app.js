@@ -11,7 +11,21 @@ dotenv.config();
 const bcrypt = require('bcrypt')
 const salt = 10;
 
+<<<<<<< HEAD
 app.use(cors());
+=======
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+app.use(session({
+    secret: 'yourSecretKey',
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+>>>>>>> cae365874edba02897930e786b56539144be80bb
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 mongoose.connect("mongodb://localhost:27017/crmDB")
@@ -21,12 +35,27 @@ const userSchema = mongoose.Schema({
     password: String
 })
 
+const recordSchema = mongoose.Schema({
+    time: String,
+    tag: String,
+    title: String,
+    description: String
+})
+
+const autoServiceSchema = mongoose.Schema({
+    users: [userSchema],
+    records: [recordSchema]
+})
+
 const User = mongoose.model("User", userSchema);
+const AutoService = mongoose.model("AutoService", autoServiceSchema);
+const Record = mongoose.model("Record", recordSchema);
 
 app.get('/', (req, res) => {
     console.log("Hello!");
 })
 
+<<<<<<< HEAD
 app.post('/login', async (req, res) => {
     console.log(res);
     try {
@@ -63,6 +92,31 @@ app.post('/checkAuth', async (req, res) => {
     } catch (err) {
         return res.status(401).json({ message: 'Неверный токен' });
     }
+=======
+app.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return res.status(500).json({ message: 'Ошибка сервера' });
+        }
+        if (!user) {
+            return res.status(401).send({ message: 'Неправильный логин или пароль' });
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                return res.status(500).json({ message: 'Ошибка входа' });
+            }
+            return res.status(200).json(user);
+        });
+    })(req, res, next);
+});
+
+app.get('/checkAuth', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ authenticated: true, user: req.user });
+      } else {
+        res.json({ authenticated: false });
+      }
+>>>>>>> cae365874edba02897930e786b56539144be80bb
 })
 
 app.post('/reg', async (req, res) => {

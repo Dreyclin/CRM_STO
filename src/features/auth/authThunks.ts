@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
 import { LoginCredentials, LoginResponse, RegisterResponse, RegistrationCredentials, User } from "./authTypes";
+=======
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { LoginCredentials, RegistrationCredentials, User } from "./authTypes";
+>>>>>>> cae365874edba02897930e786b56539144be80bb
 import axios from "axios";
 
 export const loginUser = createAsyncThunk<LoginResponse, LoginCredentials, {rejectValue: string}>(

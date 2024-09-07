@@ -24,7 +24,12 @@ const Registration: React.FC = () => {
 
     return (
         <div className="">
+<<<<<<< HEAD
             <Header title={"AutoService CRM"} welcomeName={null} />
+=======
+            {error && <p className="h1 text-center fw-bold">{error}</p>}
+            <Header title={"AutoService CRM"} welcome={undefined}/>
+>>>>>>> cae365874edba02897930e786b56539144be80bb
             <form onSubmit={handleSubmit} className="d-flex flex-column w-100 h-8 justify-content-center align-items-center gap-4">
                 <input type="text" className="form-control w-25 py-3" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
                 <input type="text" className="form-control w-25 py-3" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)} />

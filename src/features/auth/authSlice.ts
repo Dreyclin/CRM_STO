@@ -26,8 +26,13 @@ const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 const {token, user} = action.payload;
                 state.status = "succeded"
+<<<<<<< HEAD
                 state.token = token;
                 state.user = user;
+=======
+                state.error = null;
+                state.user = action.payload;
+>>>>>>> cae365874edba02897930e786b56539144be80bb
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = "failed"
