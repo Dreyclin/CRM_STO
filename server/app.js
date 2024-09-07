@@ -3,6 +3,8 @@ const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const env = require('dotenv');
 
 const bcrypt = require('bcrypt')
 const salt = 10;
@@ -23,45 +25,30 @@ app.get('/', (req, res) => {
     console.log("Hello!");
 })
 
-app.post('/login', (req, res, next) => {
+app.post('/login', async (req, res) => {
     console.log(res);
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            return res.status(500).json({ message: 'Ошибка сервера' });
+    try {
+        const {email, password} = req.body;
+        const user = await User.findOne({email});
+        if(!user || !(await bcrypt.compare(password, user.password))){
+            return res.status(400).json({ message: 'Неверный логин или пароль' });
         }
-        if (!user) {
-            return res.status(401).send({ message: 'Неправильный логин или пароль' });
-        }
-        req.logIn(user, (err) => {
-            if (err) {
-                return res.status(500).json({ message: 'Ошибка входа' });
-            }
-            return res.status(200).json({ message: 'Вход успешен', user, isAuthed: true });
-        });
-    })(req, res, next);
-});
 
-// try {
-//     const user = await User.findOne({ email: email })
-//     if (user) {
-//         const hashedPassword = user.password
-//         console.log(hashedPassword);
-//         const isMatch = await bcrypt.compare(plainPassword, hashedPassword)
-//         if (isMatch) {
-//             console.log("CONGRATS!");
-//         } else {
-//             console.log("Failed!");
-//         }
-//     } else {
-//         console.log("No such a user!");
-//     }
-// } catch (error) {
-//     console.log(error);
-// }
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '1h'})
+        res.json({token, user: {id: user._id, email: user.email}})
+    } catch (error) {
+        res.status(500).json({ message: 'Ошибка сервера' });
+    }
+});
 
 app.post('/reg', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+    const user = await User.findOne({email: email});
+    
+    if(user) {
+        res.status(400).json({message: "Пользователь уже существует!"})
+    }
 
     const hashedPass = await bcrypt.hash(password, salt);
 
