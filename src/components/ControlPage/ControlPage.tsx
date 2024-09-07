@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
 import List from "../List/List";
-import Records from "../Clients/Records";
+import Records from "../Records/Records";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/store";
 import { checkAuth } from "../../features/auth/authThunks";

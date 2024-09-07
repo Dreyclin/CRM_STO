@@ -21,21 +21,33 @@ const userSchema = mongoose.Schema({
     password: String
 })
 
+const clientSchema = mongoose.Schema({
+    name: String,
+    phoneNumber: [String] | String,
+    car: {
+        brand: String,
+        model: String,
+        number: String
+    }
+})
 const recordSchema = mongoose.Schema({
-    time: String,
-    tag: String,
-    title: String,
-    description: String
+    client: clientSchema,
+    car: String,
+    carNumber: String,
+    description: String,
+    date: Date,
+    duration: Number,
+    status: String
 })
 
 const autoServiceSchema = mongoose.Schema({
-    users: [userSchema],
-    records: [recordSchema]
+    records: [recordSchema],
+    clients: [clientSchema]
 })
 
 const User = mongoose.model("User", userSchema);
-const AutoService = mongoose.model("AutoService", autoServiceSchema);
 const Record = mongoose.model("Record", recordSchema);
+const Client = mongoose.model("Client", clientSchema);
 
 app.get('/', (req, res) => {
     console.log("Hello!");
