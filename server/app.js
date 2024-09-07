@@ -33,7 +33,7 @@ app.post('/login', async (req, res) => {
         const {email, password} = req.body;
         const user = await User.findOne({email});
         if(!user || !(await bcrypt.compare(password, user.password))){
-            return res.status(400).json({ message: 'Неверный логин или пароль' });
+            return res.status(400).json({ message: 'Неверный логин/пароль или вы не зарегистрированы' });
         }
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '1h'})
@@ -45,7 +45,7 @@ app.post('/login', async (req, res) => {
 
 app.post('/checkAuth', (req, res) => {
     let token;
-
+    console.log('Authorization header:', req.headers.authorization);
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
     }

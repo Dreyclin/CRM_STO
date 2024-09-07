@@ -14,13 +14,10 @@ export default function Auth() {
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        dispatch(loginUser({email, password})).then(() => {
-            if(!error) {
-                console.log(error);
-                navigate('/control')
-            } else {
-                alert(error);
-            }
+        dispatch(loginUser({email, password})).unwrap().then(() => {
+            navigate('/control')
+        }).catch(err => {
+            alert(err);
         })
    
     }

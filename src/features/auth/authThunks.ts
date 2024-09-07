@@ -5,7 +5,7 @@ import axios from "axios";
 export const loginUser = createAsyncThunk<LoginResponse, LoginCredentials, {rejectValue: string}>(
     'auth/loginUser',
     
-    async (credentials: LoginCredentials) => {
+    async (credentials: LoginCredentials, thunkAPI) => {
         try {
             const response = await axios.post("http://localhost:5000/login", credentials);
             console.log(response.data);
@@ -13,7 +13,7 @@ export const loginUser = createAsyncThunk<LoginResponse, LoginCredentials, {reje
             return response.data;
         } catch (error: any) {
             console.log(error.response.data.message);
-            return isRejectedWithValue(error.response.data.message);
+            return thunkAPI.rejectWithValue(error.response.data.message);
         }
     }
 )
@@ -23,11 +23,13 @@ export const checkAuth = createAsyncThunk(
     async() => {
         try {
             const token = localStorage.getItem('token');
+            console.log(token);
             if(!token) throw new Error ("Нет токена!");
 
-            const response = await axios.post('http://localhost:5000/checkAuth', {
+            const response = await axios.post('http://localhost:5000/checkAuth', {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            console.log(response.data);
             return response.data;
         } catch (error: any) {
             return isRejectedWithValue(error.response.data.message);
