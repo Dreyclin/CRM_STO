@@ -1,6 +1,6 @@
 import React from "react";
 
-const ClientsHeader: React.FC = () => {
+const RecordsHeader: React.FC = () => {
     return (
         <div className="top-btns d-flex justify-content-between mb-4">
             <div className="btn-group">
@@ -12,4 +12,4 @@ const ClientsHeader: React.FC = () => {
     )
 }
 
-export default ClientsHeader;
+export default RecordsHeader;

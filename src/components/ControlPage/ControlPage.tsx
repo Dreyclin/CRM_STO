@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "../Header/Header";
-import Clients from "../Clients/Clients";
 import List from "../List/List";
+import Records from "../Clients/Records";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
@@ -11,7 +11,7 @@ const ControlPage: React.FC = () => {
             <Header title={title} />
             <div className="d-flex container gap-5">
                 <List />
-                {title === "Запись" ? <Clients /> : null}
+                {title === "Запись" ? <Records /> : null}
             </div>
         </div>
     )

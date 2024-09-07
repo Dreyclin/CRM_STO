@@ -1,6 +1,6 @@
 import List from "./components/List/List";
 import Header from "./components/Header/Header";
-import Clients from "./components/Clients/Clients";
+import Clients from "./components/Clients/Records";
 import useRouter from "./hooks/useRouter";
 import { RouterProvider } from "react-router-dom";
 
