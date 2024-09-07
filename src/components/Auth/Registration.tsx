@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Header from "../Header/Header";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { registerUser } from "../../features/auth/authThunks";
-import { AppDispatch, RootState } from "../../app/store";
+import { AppDispatch } from "../../app/store";
 
 const Registration: React.FC = () => {
     const [email, setEmail] = useState('');

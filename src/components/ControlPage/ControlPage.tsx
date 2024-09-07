@@ -18,11 +18,16 @@ const ControlPage: React.FC = () => {
         })
     }, [])
 
+    function handleTitleChange(e: React.MouseEvent<HTMLLIElement>) {
+        const target = e.target as HTMLElement;
+        setTitle(target.innerHTML);
+    }
+
     return (
         <div className="">
             <Header title={title} />
             <div className="d-flex container gap-5">
-                <List />
+                <List navChange={handleTitleChange}/>
                 {title === "Запись" ? <Records /> : null}
             </div>
         </div>

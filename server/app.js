@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
 
 const clientSchema = mongoose.Schema({
     name: String,
-    phoneNumber: [String] | String,
+    phoneNumber: [String],
     car: {
         brand: String,
         model: String,

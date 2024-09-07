@@ -1,4 +1,4 @@
-import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { LoginCredentials, LoginResponse, RegisterResponse, RegistrationCredentials, User } from "./authTypes";
 import axios from "axios";
 

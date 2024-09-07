@@ -11,7 +11,6 @@ export default function Auth() {
     const [password, setPassword] = useState('');
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
-    const { error } = useSelector((state: RootState) => state.auth);
     const user = useSelector((state: RootState) => state.auth.user);
 
     useEffect(() => {
