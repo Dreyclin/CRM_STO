@@ -1,7 +1,7 @@
 import React from "react";
 import Day from "./Cards/Day";
 
-const ClientsContent: React.FC = () => {
+const RecordsContent: React.FC = () => {
     return (
         <div className="content d-flex flex-column gap-4 mb-4">
             <Day />
@@ -10,4 +10,4 @@ const ClientsContent: React.FC = () => {
     )
 }
 
-export default ClientsContent;
+export default RecordsContent;

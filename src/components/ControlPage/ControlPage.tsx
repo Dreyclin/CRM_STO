@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
-import Clients from "../Clients/Clients";
 import List from "../List/List";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import Records from "../Clients/Records";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/store";
+import { checkAuth } from "../../features/auth/authThunks";
+import { useNavigate } from "react-router-dom";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
-    const userName = useSelector((state: RootState) => state.auth.user?.email)
-    
-    
+    const dispatch: AppDispatch = useDispatch();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(checkAuth()).unwrap().catch(() => {
+            navigate('/');
+        })
+    }, [])
 
     return (
         <div className="">
-            <Header title={title} welcome={userName}/>
+            <Header title={title} />
             <div className="d-flex container gap-5">
                 <List />
-                {title === "Запись" ? <Clients /> : null}
+                {title === "Запись" ? <Records /> : null}
             </div>
         </div>
     )

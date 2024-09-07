@@ -11,16 +11,12 @@ const Registration: React.FC = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
-    const { error } = useSelector((state: RootState) => state.auth);
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (password === confirmPassword) {
-            dispatch(registerUser({ email, password, confirmPassword }))
-            if (!error) {
-                navigate('/');
-            }
 
+        if (password === confirmPassword) {
+            dispatch(registerUser({ email, password, confirmPassword })).unwrap().then(() => navigate('/')).catch(error => alert(error));
         }
         else
             alert("Passwords do not match!");
@@ -28,8 +24,7 @@ const Registration: React.FC = () => {
 
     return (
         <div className="">
-            {error && <p className="h1 text-center fw-bold">{error}</p>}
-            <Header title={"AutoService CRM"} welcome={undefined}/>
+            <Header title={"AutoService CRM"} />
             <form onSubmit={handleSubmit} className="d-flex flex-column w-100 h-8 justify-content-center align-items-center gap-4">
                 <input type="text" className="form-control w-25 py-3" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
                 <input type="text" className="form-control w-25 py-3" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)} />

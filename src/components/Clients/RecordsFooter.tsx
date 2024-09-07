@@ -1,6 +1,6 @@
 import React from "react";
 
-const ClientsFooter: React.FC = () => {
+const RecordsFooter: React.FC = () => {
     return (
         <div className="clients-footer d-flex justify-content-end mb-4">
             <div className="flex-container d-flex gap-4">
@@ -11,4 +11,4 @@ const ClientsFooter: React.FC = () => {
     )
 }
 
-export default ClientsFooter;
+export default RecordsFooter;
