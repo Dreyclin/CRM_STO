@@ -4,7 +4,9 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
-const env = require('dotenv');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const bcrypt = require('bcrypt')
 const salt = 10;
@@ -41,6 +43,27 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.post('/checkAuth', (req, res) => {
+    let token;
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Нет токена, авторизация отклонена' });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+  
+      res.json({ message: 'Доступ разрешен', user: req.user });
+    } catch (err) {
+      return res.status(401).json({ message: 'Неверный токен' });
+    }
+})
+
 app.post('/reg', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -48,18 +71,20 @@ app.post('/reg', async (req, res) => {
     
     if(user) {
         res.status(400).json({message: "Пользователь уже существует!"})
+    } else {
+        const hashedPass = await bcrypt.hash(password, salt);
+
+        const newUser = new User({
+            email: email,
+            password: hashedPass
+        })
+    
+        await newUser.save()
+    
+        res.status(200).json({message: "Пользователь успешно зарегистрирован"})
     }
 
-    const hashedPass = await bcrypt.hash(password, salt);
 
-    const newUser = new User({
-        email: email,
-        password: hashedPass
-    })
-
-    newUser.save().then(() => {
-        console.log("INSERTED");
-    });
 
 })
 

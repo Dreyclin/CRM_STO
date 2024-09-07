@@ -1,14 +1,16 @@
 import React from "react";
 
 interface IHeader {
-    title: String
+    title: String,
+    welcomeName: String | null
 }
 
-const Header: React.FC<IHeader> = ({title}) => {
+const Header: React.FC<IHeader> = ({title, welcomeName}) => {
     return (
         <div className="auth py-4 border-dashed mb-5">
             <div className="container">
                 <h1 className="fw-bold">{title}</h1>
+                <h3 className="">{welcomeName}</h3>
             </div>
         </div>
     )

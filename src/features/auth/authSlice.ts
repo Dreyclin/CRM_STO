@@ -3,6 +3,7 @@ import { AuthState, User } from "./authTypes";
 import { loginUser, registerUser } from "./authThunks";
 
 const state: AuthState = {
+    token: null,
     user: null,
     status: "idle",
     error: null
@@ -17,9 +18,11 @@ const authSlice = createSlice({
             .addCase(loginUser.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(loginUser.fulfilled, (state, action) => {
+                const {token, user} = action.payload;
                 state.status = "succeded"
-                state.user = action.payload;
+                state.token = token;
+                state.user = user;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = "failed"
@@ -31,14 +34,15 @@ const authSlice = createSlice({
             .addCase(registerUser.pending, state => {
                 state.status = "loading";
             })
-            .addCase(registerUser.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(registerUser.fulfilled, (state, action) => {
+                const {user} = action.payload
                 state.status = "succeded"
-                state.user = action.payload;
+                state.user = user;
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.status = "failed"
-                if (action.error && action.error.message)
-                    state.error = action.error.message
+                if (action.payload)
+                    state.error = action.payload
                 else
                     state.error = "Something went wrong!"
             })

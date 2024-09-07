@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../Header/Header";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
@@ -19,7 +19,7 @@ export default function Auth() {
                 console.log(error);
                 navigate('/control')
             } else {
-                console.log(error);
+                alert(error);
             }
         })
    
@@ -27,8 +27,7 @@ export default function Auth() {
 
     return (
         <div className="">
-            {error && <p className="h1 text-center fw-bold">{error}</p>}
-            <Header title={"AutoService CRM"} />
+            <Header title={"AutoService CRM"} welcomeName={null}/>
             <form onSubmit={handleSubmit} action="" className="d-flex flex-column w-100 h-8 justify-content-center align-items-center gap-4">
                 <input type="text" className="form-control w-25 py-3" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}/>
                 <input type="text" className="form-control w-25 py-3" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)}/>
