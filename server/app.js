@@ -1,59 +1,16 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const express = require('express');
 const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 
 const bcrypt = require('bcrypt')
 const salt = 10;
 
 app.use(cors());
-app.use(session({
-    secret: 'yourSecretKey',
-    resave: false,
-    saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 mongoose.connect("mongodb://localhost:27017/crmDB")
-
-passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-    try {
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return done(null, false, { message: 'Incorrect email or password.' });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return done(null, false, { message: 'Incorrect email or password.' });
-        }
-
-        return done(null, user);
-    } catch (err) {
-        return done(err);
-    }
-}));
-
-
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-    try {
-        const user = await User.findById(id);
-        done(null, user);
-    } catch (err) {
-        done(err);
-    }
-});
 
 const userSchema = mongoose.Schema({
     email: String,
@@ -79,7 +36,7 @@ app.post('/login', (req, res, next) => {
             if (err) {
                 return res.status(500).json({ message: 'Ошибка входа' });
             }
-            return res.status(200).json({ message: 'Вход успешен', user });
+            return res.status(200).json({ message: 'Вход успешен', user, isAuthed: true });
         });
     })(req, res, next);
 });
