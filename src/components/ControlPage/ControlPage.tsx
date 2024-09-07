@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/store";
 import { checkAuth } from "../../features/auth/authThunks";
 import { useNavigate } from "react-router-dom";
+import Clients from "../Clients/Clients";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
@@ -27,8 +28,9 @@ const ControlPage: React.FC = () => {
         <div className="">
             <Header title={title} />
             <div className="d-flex container gap-5">
-                <List navChange={handleTitleChange}/>
+                <List navChange={handleTitleChange} activeTab={title}/>
                 {title === "Запись" ? <Records /> : null}
+                {title === "Клиенты" ? <Clients /> : null}
             </div>
         </div>
     )

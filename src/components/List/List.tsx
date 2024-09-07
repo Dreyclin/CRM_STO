@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 interface IList {
     navChange: (title: React.MouseEvent<HTMLLIElement>) => void
+    activeTab: string
 }
 
-const List: React.FC<IList> = ({navChange}) => {
+const List: React.FC<IList> = ({navChange, activeTab}) => {
 
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
@@ -21,8 +22,8 @@ const List: React.FC<IList> = ({navChange}) => {
     return (
         <div className="list-width">
             <ul className="list-group">
-                <li className="list-group-item active">Запись</li>
-                <li className="list-group-item" onClick={(e) => navChange(e)}>Клиенты</li>
+                <li className={`list-group-item ${activeTab === "Запись" ? 'active' : ""}`} onClick={(e) => navChange(e)}>Запись</li>
+                <li className={`list-group-item ${activeTab === "Клиенты" ? 'active' : ""}`} onClick={(e) => navChange(e)}>Клиенты</li>
                 <li className="list-group-item">Настройки</li>
                 <li className="list-group-item" onClick={handleLogOut}>Выйти</li>
             </ul>

@@ -28,7 +28,8 @@ const clientSchema = mongoose.Schema({
         brand: String,
         model: String,
         number: String
-    }
+    },
+    personalDiscount: Number
 })
 const recordSchema = mongoose.Schema({
     client: clientSchema,
