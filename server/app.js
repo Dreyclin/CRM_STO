@@ -32,7 +32,7 @@ const clientSchema = mongoose.Schema({
     personalDiscount: Number
 })
 const recordSchema = mongoose.Schema({
-    client: clientSchema,
+    clientId: String,
     car: String,
     carNumber: String,
     description: String,
@@ -42,8 +42,8 @@ const recordSchema = mongoose.Schema({
 })
 
 const autoServiceSchema = mongoose.Schema({
-    records: [recordSchema],
-    clients: [clientSchema]
+    records: String,
+    clients: String
 })
 
 const User = mongoose.model("User", userSchema);
