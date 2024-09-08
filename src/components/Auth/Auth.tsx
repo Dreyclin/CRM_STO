@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../Header/Header";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState } from "../../app/store";
-import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../app/store";
+import { useDispatch } from "react-redux";
 import { loginUser } from "../../features/auth/authThunks";
-import { checkAuth } from "../../features/auth/authService";
 
 export default function Auth() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
-    const user = useSelector((state: RootState) => state.auth.user);
-
-    useEffect(() => {
-        async function fetchData() {
-            console.log(user);
-            if(user){
-                const data = await checkAuth(user);
-                console.log(data);
-            }
-        }
-        fetchData();
-    }, [])
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();

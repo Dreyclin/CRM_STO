@@ -2,7 +2,7 @@ export interface User {
     id: string,
     email: string,
     password: string,
-    isActive: Boolean
+    autoServiceId: string | null
 }
 
 export interface AuthState {
