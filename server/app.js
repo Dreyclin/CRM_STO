@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 mongoose.connect("mongodb://localhost:27017/crmDB")
 
 const userSchema = mongoose.Schema({
+    autoServiceId: String,
     email: String,
     password: String
 })
@@ -37,18 +38,34 @@ const recordSchema = mongoose.Schema({
     carNumber: String,
     description: String,
     date: Date,
-    duration: Number,
+    duration: {
+        from: Number,
+        to: Number
+    },
     status: String
 })
 
 const autoServiceSchema = mongoose.Schema({
-    records: String,
-    clients: String
+    records: [recordSchema],
+    clients: [clientSchema]
 })
 
 const User = mongoose.model("User", userSchema);
 const Record = mongoose.model("Record", recordSchema);
 const Client = mongoose.model("Client", clientSchema);
+const AutoService = mongoose.model("AutoService", autoServiceSchema);
+
+const newRecord = new Record({
+    clientId: '123',
+    car: "BMX X6",
+    description: "Замена масла, ТО, диагностика ходовки",
+    date: new Date().getDate(),
+    duration: {
+        from: 9,
+        to: 10
+    },
+    status: "New"
+})
 
 app.get('/', (req, res) => {
     console.log("Hello!");
@@ -58,12 +75,13 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
+        const autoServiceId = user.autoServiceId;
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(400).json({ message: 'Неверный логин/пароль или вы не зарегистрированы' });
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
-        res.json({ token, user: { id: user._id, email: user.email } })
+        res.json({token, autoServiceId, user: { id: user._id, email: user.email }})
     } catch (error) {
         res.status(500).json({ message: 'Ошибка сервера' });
     }
@@ -113,6 +131,30 @@ app.post('/reg', async (req, res) => {
 
 
 
+})
+
+app.post('/loadRecords', async (req, res) => {
+    const autoServiceId = req.body.id;
+    try {
+        const autoService = await AutoService.findOne({_id: autoServiceId});
+        if(autoService.records) {
+            res.status(200).json(autoService.records);
+        } else {
+            res.status(200).json({records: null});
+        }
+    } catch (error) {
+        res.status(500).json({message: "Ошибка на сервере"})
+    }
+
+})
+
+app.post('/insertData', async (req, res) => {
+    const autoService = await AutoService.findOne({_id: '66def61230dcc57f108b06ef'});
+
+    autoService.records.push(newRecord);
+    autoService.save();
+
+    console.log("SUCCESS!");
 })
 
 app.listen(5000, (req, res) => {

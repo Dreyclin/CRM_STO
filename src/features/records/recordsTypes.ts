@@ -1,15 +1,19 @@
 export interface Record {
-    car: String,
-    carNumber: String,
-    description: String,
+    car: string,
+    carNumber: string,
+    description: string,
     date: Date,
-    duration: Number,
-    status: String
+    duration: {
+        from: number,
+        to: number
+    },
+    status: string
 }
 
 
 export interface RecordState {
     id: string | null,
-    status: 'idle' | 'failed' | 'succseeded',
-    records: [Record] | null
+    status: 'idle' | 'failed' | 'succseeded' | 'loading',
+    records: Record[] | null,
+    error: string | null
 }

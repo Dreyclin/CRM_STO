@@ -10,6 +10,7 @@ export const loginUser = createAsyncThunk<LoginResponse, LoginCredentials, {reje
             const response = await axios.post("http://localhost:5000/login", credentials);
             console.log(response.data);
             localStorage.setItem('token', response.data.token)
+            localStorage.setItem('autoServiceId', response.data.autoServiceId);
             return response.data;
         } catch (error: any) {
             console.log(error.response.data.message);
