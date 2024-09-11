@@ -12,12 +12,13 @@ const Records: React.FC = () => {
 
     useEffect(() => {
         const autoServiceId = localStorage.getItem("autoServiceId");
-        console.log(autoServiceId);
         const credentials: AutoServiceCredentials = {
             id: autoServiceId
         }
-        dispatch(loadRecords(credentials));
-    })
+        dispatch(loadRecords(credentials)).catch(err => {
+            alert(err);
+        });
+    }, [])
     
     return (
         <div className="w-100">

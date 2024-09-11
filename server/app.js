@@ -14,7 +14,7 @@ const salt = 10;
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }))
-mongoose.connect("mongodb://localhost:27017/crmDB")
+mongoose.connect("mongodb+srv://dreyclin:faqyou011103!@crmcluster.gqan7.mongodb.net/?retryWrites=true&w=majority&appName=CRMCluster")
 
 const userSchema = mongoose.Schema({
     autoServiceId: String,
@@ -57,6 +57,7 @@ const AutoService = mongoose.model("AutoService", autoServiceSchema);
 
 const newRecord = new Record({
     clientId: '123',
+    autoServiceId: '66e0c28ee88edebd3a68e923',
     car: "BMX X6",
     description: "Замена масла, ТО, диагностика ходовки",
     date: new Date().getDate(),
@@ -64,7 +65,7 @@ const newRecord = new Record({
         from: 9,
         to: 10
     },
-    status: "New"
+    status: "Новый"
 })
 
 app.get('/', (req, res) => {
@@ -75,11 +76,11 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        const autoServiceId = user.autoServiceId;
-        if (!user || !(await bcrypt.compare(password, user.password))) {
+        console.log(user);
+        if (user === null || !(await bcrypt.compare(password, user.password))) {
             return res.status(400).json({ message: 'Неверный логин/пароль или вы не зарегистрированы' });
         }
-
+        const autoServiceId = user.autoServiceId;
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
         res.json({token, autoServiceId, user: { id: user._id, email: user.email }})
     } catch (error) {
@@ -145,11 +146,59 @@ app.post('/loadRecords', async (req, res) => {
     } catch (error) {
         res.status(500).json({message: "Ошибка на сервере"})
     }
-
 })
 
+app.post('/changeStatus', async (req, res) => {
+    try {
+        const autoServiceId = req.body.id;
+        const recordId = req.body.recordId;
+    
+        const autoService = await AutoService.findOne({_id: autoServiceId});
+        
+        if(autoService){
+            const record = await autoService.records.id(recordId);
+            if(record) {
+                if(record.status === "Новый") {
+                    record.status = "В работе";
+                } else if (record.status === "В работе") {
+                    record.status = "Ждет клиента";
+                } else if (record.status === "Ждет клиента") {
+                    record.status = "Новый";
+                }
+    
+                autoService.save().then(() => {
+                    const records = autoService.records.filter(record => record.status != "Закрыт")
+                    console.log(records);
+                    res.status(200).json(records);
+                });
+    
+            } else {
+                res.status(400).json({message: "Запись не найдена!"});
+            } 
+        } else {
+            res.status(400).json({message: "Автосервис не найден!"});
+        }
+    } catch (error) {
+        res.status(500).json({message: "Ошибка на сервере"});
+    }
+   
+})
+
+
+
+
+
+
+
+
+
+
+
+
 app.post('/insertData', async (req, res) => {
-    const autoService = await AutoService.findOne({_id: '66def61230dcc57f108b06ef'});
+    const autoService = await AutoService.findOne({_id: '66e0c28ee88edebd3a68e923'});
+
+    console.log(autoService);
 
     autoService.records.push(newRecord);
     autoService.save();

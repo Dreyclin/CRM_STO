@@ -22,3 +22,7 @@ li:not(.active):hover {
 .list-width {
     width: 15rem;
 }
+
+.status-badge:hover {
+    cursor: pointer;
+}

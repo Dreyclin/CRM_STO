@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Record from "./Record";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
@@ -6,7 +6,7 @@ import { RootState } from "../../../app/store";
 const Day: React.FC = () => {
     
     const {records} = useSelector((state: RootState) => state.record)
-
+    console.log(records);
     return (
         <div className="card p-4">
             <p>Сегодня (2 сентября)</p>
@@ -16,7 +16,10 @@ const Day: React.FC = () => {
                     car={record.car} 
                     description={record.description} 
                     duration={record.duration} 
-                    key={key}/>})}
+                    key={key}
+                    status={record.status}
+                    id={record._id}
+                    />})}
             </div>
         </div>
     )
