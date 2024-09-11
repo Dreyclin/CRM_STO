@@ -28,5 +28,6 @@ export enum StatusEnum {
 }
 
 export interface RecordCredentials extends AutoServiceCredentials {
-    recordId: string
+    recordId: string,
+    status: string | null
 }

@@ -152,24 +152,25 @@ app.post('/changeStatus', async (req, res) => {
     try {
         const autoServiceId = req.body.id;
         const recordId = req.body.recordId;
-    
+        const status = req.body.status;
         const autoService = await AutoService.findOne({_id: autoServiceId});
         
         if(autoService){
             const record = await autoService.records.id(recordId);
             if(record) {
-                if(record.status === "Новый") {
-                    record.status = "В работе";
-                } else if (record.status === "В работе") {
-                    record.status = "Ждет клиента";
-                } else if (record.status === "Ждет клиента") {
-                    record.status = "Новый";
+                if(status){
+                    record.status = status;
+                } else {
+                    if(record.status === "Новый") {
+                        record.status = "В работе";
+                    } else if (record.status === "В работе") {
+                        record.status = "Ждет клиента";
+                    } else if (record.status === "Ждет клиента") {
+                        record.status = "Новый";
+                    }
                 }
-    
                 autoService.save().then(() => {
-                    const records = autoService.records.filter(record => record.status != "Закрыт")
-                    console.log(records);
-                    res.status(200).json(records);
+                    res.status(200).json(autoService.records);
                 });
     
             } else {
@@ -179,7 +180,7 @@ app.post('/changeStatus', async (req, res) => {
             res.status(400).json({message: "Автосервис не найден!"});
         }
     } catch (error) {
-        res.status(500).json({message: "Ошибка на сервере"});
+        res.status(401).json({message: "Ошибка на сервере"});
     }
    
 })

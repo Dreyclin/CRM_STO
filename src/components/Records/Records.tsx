@@ -18,7 +18,7 @@ const Records: React.FC = () => {
         dispatch(loadRecords(credentials)).catch(err => {
             alert(err);
         });
-    }, [])
+    }, [dispatch])
     
     return (
         <div className="w-100">

@@ -1,7 +1,5 @@
 import React from "react";
 import { useRecordStatus } from "../../../hooks/useRecordStatus";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../app/store";
 
 interface RecordProps {
     id: string,
@@ -22,14 +20,18 @@ const Record: React.FC<RecordProps> = ({duration, car, description, status, id})
             <div className="card-header d-flex align-items-center justify-content-between">
                 <h5 className="mb-0">{duration.from}:00-{duration.to}:00</h5>
                 <div className="badges d-flex gap-2">
-                    <div className={getBadgeClass(status)} onClick={() => handleStatusClick(id)}>{status}</div>
-                    <div className="badge bg-primary status-badge">Подъемник</div>
+                    <div className={getBadgeClass(status)} onClick={() => handleStatusClick(id, null)}>{status}</div>
+                    <div className="badge bg-primary">Подъемник</div>
                 </div>
    
             </div>
             <div className="card-body">
                 <h4>{car} - Дмитрий</h4>
                 <p>{description}</p>
+                <div className="d-flex gap-2">
+                    <button className="btn btn-primary">Редактировать</button>
+                    <button className="btn btn-danger" onClick={() => handleStatusClick(id, "Закрыт")}>Закрыть заявку</button>
+                </div>
             </div>
         </div>
     )

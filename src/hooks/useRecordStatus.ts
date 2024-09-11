@@ -1,16 +1,17 @@
-import { useState } from "react";
 import { RecordCredentials } from "../features/records/recordsTypes";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../app/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../app/store";
 import { changeStatus } from "../features/records/recordsThunks";
 
 export const useRecordStatus = () => {
     const dispatch: AppDispatch = useDispatch();
 
-    const handleStatusClick = (id: string) => {
+    const handleStatusClick = (id: string, status: string | null) => {
+        console.log(status);
         const recordCredentials: RecordCredentials = {
             id: localStorage.getItem('autoServiceId'),
-            recordId: id
+            recordId: id,
+            status: status
         }
         dispatch(changeStatus(recordCredentials)).unwrap().then(response => {
         }).catch(err => {
