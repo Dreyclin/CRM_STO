@@ -1,0 +1,23 @@
+import React, { ReactNode } from "react";
+
+interface ModalType {
+    children? : ReactNode,
+    isOpen: boolean,
+    toggle: () => void
+}
+
+const Modal: React.FC<ModalType> = ({children, isOpen, toggle}) => {
+    return(
+        <>
+            {isOpen && 
+            <div className="modal-overlay" onClick={toggle}>
+                <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+                    {children}
+                </div>
+            </div>
+            }
+        </>
+    )
+}
+
+export default Modal

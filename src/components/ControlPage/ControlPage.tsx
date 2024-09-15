@@ -7,17 +7,19 @@ import { AppDispatch } from "../../app/store";
 import { checkAuth } from "../../features/auth/authThunks";
 import { useNavigate } from "react-router-dom";
 import Clients from "../Clients/Clients";
+import Modal from "../Records/Modal/Modal";
+import { useModal } from "../../hooks/useModal";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
-
+    const { isOpen, toggle } = useModal();
     useEffect(() => {
         dispatch(checkAuth()).unwrap().catch(() => {
             navigate('/');
         })
-    }, [])
+    }, [dispatch, navigate])
 
     function handleTitleChange(e: React.MouseEvent<HTMLLIElement>) {
         const target = e.target as HTMLElement;
@@ -25,14 +27,15 @@ const ControlPage: React.FC = () => {
     }
 
     return (
-        <div className="">
-            <Header title={title} />
-            <div className="d-flex container gap-5">
-                <List navChange={handleTitleChange} activeTab={title}/>
-                {title === "Запись" ? <Records /> : null}
-                {title === "Клиенты" ? <Clients /> : null}
+            <div className="">
+                <Header title={title} />
+                <div className="d-flex container gap-5">
+                    <List navChange={handleTitleChange} activeTab={title} />
+                    {title === "Запись" ? <Records /> : null}
+                    {title === "Клиенты" ? <Clients /> : null}
+                </div>
+                <Modal isOpen={isOpen} toggle={toggle}></Modal>
             </div>
-        </div>
     )
 
 
