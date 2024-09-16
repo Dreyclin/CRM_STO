@@ -19,7 +19,8 @@ const Day: React.FC<DayCardProps> = ({day}) => {
                     duration={record.duration}
                     key={key}
                     status={record.status}
-                    id={record._id}
+                    id={record._id ? record._id : "no-id"}
+                    client={record.clientId}
                 />
             })}
         </div>

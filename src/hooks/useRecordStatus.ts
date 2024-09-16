@@ -9,7 +9,7 @@ export const useRecordStatus = () => {
     const handleStatusClick = (id: string, status: string | null) => {
         console.log(status);
         const recordCredentials: RecordCredentials = {
-            id: localStorage.getItem('autoServiceId'),
+            autoServiceId: localStorage.getItem('autoServiceId'),
             recordId: id,
             status: status
         }

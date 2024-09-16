@@ -12,9 +12,7 @@ const Modal: React.FC<ModalType> = ({ children, isOpen, toggle }) => {
             {isOpen &&
                 <div className="modal-overlay" onClick={toggle}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <form action="">
                             {children}
-                        </form>
                     </div>
                 </div>
             }

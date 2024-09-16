@@ -86,7 +86,7 @@ app.post('/login', async (req, res) => {
         }
         const autoServiceId = user.autoServiceId;
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
-        res.json({token, autoServiceId, user: { id: user._id, email: user.email }})
+        res.json({ token, autoServiceId, user: { id: user._id, email: user.email } })
     } catch (error) {
         res.status(500).json({ message: 'Ошибка сервера' });
     }
@@ -139,16 +139,16 @@ app.post('/reg', async (req, res) => {
 })
 
 app.post('/loadRecords', async (req, res) => {
-    const autoServiceId = req.body.id;
+    const autoServiceId = req.body.autoServiceId;
     try {
-        const autoService = await AutoService.findOne({_id: autoServiceId});
-        if(autoService.days) {
+        const autoService = await AutoService.findOne({ _id: autoServiceId });
+        if (autoService.days) {
             res.status(200).json(autoService.days);
         } else {
-            res.status(200).json({days: null});
+            res.status(200).json({ days: null });
         }
     } catch (error) {
-        res.status(500).json({message: "Ошибка на сервере"})
+        res.status(500).json({ message: "Ошибка на сервере" })
     }
 })
 
@@ -158,7 +158,7 @@ app.post('/loadRecords', async (req, res) => {
 //         const recordId = req.body.recordId;
 //         const status = req.body.status;
 //         const autoService = await AutoService.findOne({_id: autoServiceId});
-        
+
 //         if(autoService){
 //             const record = await autoService.records.id(recordId);
 //             if(record) {
@@ -176,7 +176,7 @@ app.post('/loadRecords', async (req, res) => {
 //                 autoService.save().then(() => {
 //                     res.status(200).json(autoService.records);
 //                 });
-    
+
 //             } else {
 //                 res.status(400).json({message: "Запись не найдена!"});
 //             } 
@@ -186,15 +186,54 @@ app.post('/loadRecords', async (req, res) => {
 //     } catch (error) {
 //         res.status(401).json({message: "Ошибка на сервере"});
 //     }
-   
+
 // })
 
-app.post("/addRecord", (req, res) => {
+app.post("/addRecord", async (req, res) => {
     try {
+        const autoServiceId = req.body.autoServiceId;
+        const client = req.body.client;
+        const car = req.body.car;
+        const carNumber = req.body.carNumber;
+        const description = req.body.description;
+        const date = new Date(req.body.date);
+        const { from, to } = req.body.duration;
+        const status = req.body.status;
+    
+        const autoService = await AutoService.findOne({ _id: autoServiceId });
+    
+        const newRecord = new Record ({
+            clientId: client,
+            car: car,
+            carNumber: carNumber,
+            description: description,
+            date: date,
+            duration: {
+                from: from,
+                to: to
+            },
+            status: status
+        })
+    
+        const dayIndex = autoService.days.findIndex(day => new Date(day.dayDate).getTime() === date.getTime());
         
+        console.log(dayIndex);
+    
+        if(dayIndex != -1) {
+            autoService.days[dayIndex].records.push(newRecord);
+        } else {
+            autoService.days.push({dayDate: new Date(date), records: newRecord}) 
+        }
+    
+        autoService.days.sort((a, b) => new Date(a.dayDate).getTime() - new Date(b.dayDate).getTime());
+
+        autoService.save().then(() => {
+            res.status(200).json(autoService.days);
+        });
     } catch (error) {
-        
+        res.status(500).json({message: "Ошибка на сервере!"})
     }
+   
 })
 
 
@@ -209,9 +248,9 @@ app.post("/addRecord", (req, res) => {
 
 
 app.post('/insertData', async (req, res) => {
-    const autoService = await AutoService.findOne({_id: '66e0c28ee88edebd3a68e923'});
+    const autoService = await AutoService.findOne({ _id: '66e0c28ee88edebd3a68e923' });
 
-    
+
     const findDay = new Date("2024-11-10T22:00:00.000+00:00");
     const dayIndex = autoService.days.findIndex(day => new Date(day.dayDate).getTime() === findDay.getTime())
 

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DaysRecords, RecordState } from "./recordsTypes";
-import { changeStatus, loadRecords } from "./recordsThunks";
+import { addRecord, changeStatus, loadRecords } from "./recordsThunks";
 
 const state: RecordState = {
     id: null,
@@ -45,6 +45,19 @@ const recordSlice = createSlice({
                     state.error = action.payload as string;
                 else
                     state.error = "Something went wrong"
+            })
+            .addCase(addRecord.pending, state => {
+                state.status = "loading"
+            })
+            .addCase(addRecord.fulfilled, (state, action: PayloadAction<DaysRecords[]>) => {
+                if(action.payload)
+                    state.days = action.payload;
+            })
+            .addCase(addRecord.rejected, (state, action) => {
+                if(action.payload)
+                    state.error = action.payload as string;
+                else
+                    state.error = "Something went wrong";
             })
     }
 })

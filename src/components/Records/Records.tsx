@@ -13,7 +13,7 @@ const Records: React.FC = () => {
     useEffect(() => {
         const autoServiceId = localStorage.getItem("autoServiceId");
         const credentials: AutoServiceCredentials = {
-            id: autoServiceId
+            autoServiceId: autoServiceId
         }
         dispatch(loadRecords(credentials)).catch(err => {
             alert(err);

@@ -11,7 +11,6 @@ import Modal from "../Records/Modal/Modal";
 import { useModal } from "../../hooks/useModal";
 import ModalHeader from "../Records/Modal/ModalHeader";
 import ModalContent from "../Records/Modal/ModalContent";
-import ModalFooter from "../Records/Modal/ModalFooter";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
@@ -40,7 +39,6 @@ const ControlPage: React.FC = () => {
                 <Modal isOpen={isOpen} toggle={toggle}>
                     <ModalHeader/>
                     <ModalContent/>
-                    <ModalFooter/>
                 </Modal>
             </div>
     )

@@ -1,3 +1,3 @@
 export interface AutoServiceCredentials {
-    id: string | null
+    autoServiceId: string | null
 }

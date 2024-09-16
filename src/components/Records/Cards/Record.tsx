@@ -3,6 +3,7 @@ import { useRecordStatus } from "../../../hooks/useRecordStatus";
 
 interface RecordProps {
     id: string,
+    client: string,
     duration: {
         from: number,
         to: number
@@ -12,7 +13,7 @@ interface RecordProps {
     status: string
 }
 
-const Record: React.FC<RecordProps> = ({duration, car, description, status, id}) => {
+const Record: React.FC<RecordProps> = ({duration, car, description, status, id, client}) => {
     const {getBadgeClass, handleStatusClick} = useRecordStatus();
 
     return (
@@ -26,7 +27,7 @@ const Record: React.FC<RecordProps> = ({duration, car, description, status, id})
    
             </div>
             <div className="card-body">
-                <h4>{car} - Дмитрий</h4>
+                <h4>{car} - {client}</h4>
                 <p>{description}</p>
                 <div className="d-flex gap-2">
                     <button className="btn btn-primary">Редактировать</button>
