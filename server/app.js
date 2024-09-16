@@ -46,7 +46,11 @@ const recordSchema = mongoose.Schema({
 })
 
 const autoServiceSchema = mongoose.Schema({
-    records: [recordSchema],
+    days: [{
+        dayDate: Date,
+        records: [recordSchema],
+    }
+    ],
     clients: [clientSchema]
 })
 
@@ -138,51 +142,59 @@ app.post('/loadRecords', async (req, res) => {
     const autoServiceId = req.body.id;
     try {
         const autoService = await AutoService.findOne({_id: autoServiceId});
-        if(autoService.records) {
-            res.status(200).json(autoService.records);
+        if(autoService.days) {
+            res.status(200).json(autoService.days);
         } else {
-            res.status(200).json({records: null});
+            res.status(200).json({days: null});
         }
     } catch (error) {
         res.status(500).json({message: "Ошибка на сервере"})
     }
 })
 
-app.post('/changeStatus', async (req, res) => {
-    try {
-        const autoServiceId = req.body.id;
-        const recordId = req.body.recordId;
-        const status = req.body.status;
-        const autoService = await AutoService.findOne({_id: autoServiceId});
+// app.post('/changeStatus', async (req, res) => {
+//     try {
+//         const autoServiceId = req.body.id;
+//         const recordId = req.body.recordId;
+//         const status = req.body.status;
+//         const autoService = await AutoService.findOne({_id: autoServiceId});
         
-        if(autoService){
-            const record = await autoService.records.id(recordId);
-            if(record) {
-                if(status){
-                    record.status = status;
-                } else {
-                    if(record.status === "Новый") {
-                        record.status = "В работе";
-                    } else if (record.status === "В работе") {
-                        record.status = "Ждет клиента";
-                    } else if (record.status === "Ждет клиента") {
-                        record.status = "Новый";
-                    }
-                }
-                autoService.save().then(() => {
-                    res.status(200).json(autoService.records);
-                });
+//         if(autoService){
+//             const record = await autoService.records.id(recordId);
+//             if(record) {
+//                 if(status){
+//                     record.status = status;
+//                 } else {
+//                     if(record.status === "Новый") {
+//                         record.status = "В работе";
+//                     } else if (record.status === "В работе") {
+//                         record.status = "Ждет клиента";
+//                     } else if (record.status === "Ждет клиента") {
+//                         record.status = "Новый";
+//                     }
+//                 }
+//                 autoService.save().then(() => {
+//                     res.status(200).json(autoService.records);
+//                 });
     
-            } else {
-                res.status(400).json({message: "Запись не найдена!"});
-            } 
-        } else {
-            res.status(400).json({message: "Автосервис не найден!"});
-        }
-    } catch (error) {
-        res.status(401).json({message: "Ошибка на сервере"});
-    }
+//             } else {
+//                 res.status(400).json({message: "Запись не найдена!"});
+//             } 
+//         } else {
+//             res.status(400).json({message: "Автосервис не найден!"});
+//         }
+//     } catch (error) {
+//         res.status(401).json({message: "Ошибка на сервере"});
+//     }
    
+// })
+
+app.post("/addRecord", (req, res) => {
+    try {
+        
+    } catch (error) {
+        
+    }
 })
 
 
@@ -199,9 +211,12 @@ app.post('/changeStatus', async (req, res) => {
 app.post('/insertData', async (req, res) => {
     const autoService = await AutoService.findOne({_id: '66e0c28ee88edebd3a68e923'});
 
-    console.log(autoService);
+    
+    const findDay = new Date("2024-11-10T22:00:00.000+00:00");
+    const dayIndex = autoService.days.findIndex(day => new Date(day.dayDate).getTime() === findDay.getTime())
 
-    autoService.records.push(newRecord);
+    autoService.days[dayIndex].records.push(newRecord);
+
     autoService.save();
 
     console.log("SUCCESS!");

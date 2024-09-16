@@ -17,7 +17,7 @@ export interface Record {
 export interface RecordState {
     id: string | null,
     status: 'idle' | 'failed' | 'succseeded' | 'loading',
-    records: Record[] | null,
+    days: DaysRecords[] | null
     error: string | null
 }
 
@@ -30,4 +30,9 @@ export enum StatusEnum {
 export interface RecordCredentials extends AutoServiceCredentials {
     recordId: string,
     status: string | null
+}
+
+export interface DaysRecords {
+    dayDate: Date | null,
+    records: Record[] | null
 }

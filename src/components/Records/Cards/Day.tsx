@@ -1,30 +1,29 @@
 import React from "react";
 import Record from "./Record";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
+import { DaysRecords } from "../../../features/records/recordsTypes";
 
-const Day: React.FC = () => {
-    
-    const {records} = useSelector((state: RootState) => state.record)
+interface DayCardProps {
+    day: DaysRecords
+}
 
-    const filteredRecords = records && records.filter(record => record.status !== "Закрыт");
+const Day: React.FC<DayCardProps> = ({day}) => {
 
-    console.log(records);
     return (
         <div className="card p-4">
-            <p>Сегодня (2 сентября)</p>
-            <div className="records d-flex gap-4 flex-wrap">
-                {filteredRecords && filteredRecords.map((record, key) => {
-                    return <Record 
-                    car={record.car} 
-                    description={record.description} 
-                    duration={record.duration} 
+        <p className="fw-bold h4 pb-3">{day.dayDate ? new Date(day.dayDate).toLocaleDateString("ru-RU", {day: 'numeric', month: 'long'}) : "Нет даты"}</p>
+        <div className="records d-flex gap-4 flex-wrap">
+            {day.records && day.records.map((record, key) => {
+                return <Record
+                    car={record.car}
+                    description={record.description}
+                    duration={record.duration}
                     key={key}
                     status={record.status}
                     id={record._id}
-                    />})}
-            </div>
+                />
+            })}
         </div>
+    </div>
     )
 }
 

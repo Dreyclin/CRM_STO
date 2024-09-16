@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Record, RecordState } from "./recordsTypes";
+import { DaysRecords, RecordState } from "./recordsTypes";
 import { changeStatus, loadRecords } from "./recordsThunks";
 
 const state: RecordState = {
     id: null,
     status: 'idle',
-    records: null,
+    days: null,
     error: null
 }
 
@@ -18,12 +18,12 @@ const recordSlice = createSlice({
             .addCase(loadRecords.pending, (state) => {
                 state.status = "loading"
             })
-            .addCase(loadRecords.fulfilled, (state, action: PayloadAction<Record[] | undefined>) => {
+            .addCase(loadRecords.fulfilled, (state, action: PayloadAction<DaysRecords[] | undefined>) => {
                 state.status = "succseeded";
                 if(action.payload)
-                    state.records = action.payload;
+                    state.days = action.payload;
                 else
-                    state.records = [];
+                    state.days = null;
             })
             .addCase(loadRecords.rejected, (state, action) => {
                 state.status = "failed"
@@ -36,9 +36,9 @@ const recordSlice = createSlice({
             .addCase(changeStatus.pending, state => {
                 state.status = 'loading';
             })
-            .addCase(changeStatus.fulfilled, (state, action: PayloadAction<Record[] | undefined>) => {
+            .addCase(changeStatus.fulfilled, (state, action: PayloadAction<DaysRecords[] | undefined>) => {
                 if(action.payload)
-                    state.records = action.payload;
+                    state.days = action.payload;
             })
             .addCase(changeStatus.rejected, (state, action) => {
                 if(action.payload)

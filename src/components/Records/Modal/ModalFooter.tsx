@@ -8,7 +8,7 @@ const ModalFooter: React.FC = () => {
     return (
         <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={toggle}>Закрыть</button>
-            <button type="button" className="btn btn-primary" >Добавить</button>
+            <button type="submit" className="btn btn-primary" >Добавить</button>
         </div>
     )
 }
