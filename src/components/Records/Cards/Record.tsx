@@ -4,6 +4,7 @@ import { useRecordStatus } from "../../../hooks/useRecordStatus";
 interface RecordProps {
     id: string,
     client: string,
+    day: Date | null,
     duration: {
         from: number,
         to: number
@@ -13,7 +14,7 @@ interface RecordProps {
     status: string
 }
 
-const Record: React.FC<RecordProps> = ({duration, car, description, status, id, client}) => {
+const Record: React.FC<RecordProps> = ({duration, car, description, status, id, client, day}) => {
     const {getBadgeClass, handleStatusClick} = useRecordStatus();
 
     return (
@@ -21,7 +22,7 @@ const Record: React.FC<RecordProps> = ({duration, car, description, status, id, 
             <div className="card-header d-flex align-items-center justify-content-between">
                 <h5 className="mb-0">{duration.from}:00-{duration.to}:00</h5>
                 <div className="badges d-flex gap-2">
-                    <div className={getBadgeClass(status)} onClick={() => handleStatusClick(id, null)}>{status}</div>
+                    <div className={getBadgeClass(status)} onClick={() => handleStatusClick(id, null, day)}>{status}</div>
                     <div className="badge bg-primary">Подъемник</div>
                 </div>
    
@@ -31,7 +32,7 @@ const Record: React.FC<RecordProps> = ({duration, car, description, status, id, 
                 <p>{description}</p>
                 <div className="d-flex gap-2">
                     <button className="btn btn-primary">Редактировать</button>
-                    <button className="btn btn-danger" onClick={() => handleStatusClick(id, "Закрыт")}>Закрыть заявку</button>
+                    <button className="btn btn-danger" onClick={() => handleStatusClick(id, "Закрыт", day)}>Закрыть заявку</button>
                 </div>
             </div>
         </div>

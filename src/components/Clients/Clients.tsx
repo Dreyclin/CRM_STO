@@ -1,9 +1,21 @@
 import React from "react";
+import { Client } from "../../features/clients/clientsTypes";
 
-const Clients: React.FC = () => {
+
+interface ClientsProps {
+    clients: Client[]
+}
+
+
+const Clients: React.FC<ClientsProps> = ({clients}) => {
+
+
     return (
         <div className="w-100 d-flex flex-column gap-4">
-            <input type="text" placeholder="Поиск по номеру телефона" className="form-control w-15"/>
+            <div className="input-container d-flex justify-content-between">
+                <input type="text" placeholder="Поиск по номеру телефона" className="form-control w-15" />
+                <button className="btn btn-success">Добавить клиента</button>
+            </div>
             <table className="table table-bordered text-center">
                 <thead className="thead-light">
                     <tr>

@@ -6,10 +6,11 @@ import { changeStatus } from "../features/records/recordsThunks";
 export const useRecordStatus = () => {
     const dispatch: AppDispatch = useDispatch();
 
-    const handleStatusClick = (id: string, status: string | null) => {
+    const handleStatusClick = (id: string, status: string | null, day: Date | null) => {
         console.log(status);
         const recordCredentials: RecordCredentials = {
             autoServiceId: localStorage.getItem('autoServiceId'),
+            day: day,
             recordId: id,
             status: status
         }

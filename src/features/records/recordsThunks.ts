@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { DaysRecords, NewRecord, Record, RecordCredentials } from "./recordsTypes";
+import { DaysRecords, NewRecord, RecordCredentials } from "./recordsTypes";
 import { AutoServiceCredentials } from "../models/autoServiceModel";
 
 export const loadRecords = createAsyncThunk(
@@ -11,7 +11,7 @@ export const loadRecords = createAsyncThunk(
             return response.data;
         } catch (error) {
             const err = error as Error;
-            thunkAPI.rejectWithValue(err.message);
+            return thunkAPI.rejectWithValue(err.message);
         }
     }
 )
@@ -24,7 +24,7 @@ export const changeStatus = createAsyncThunk(
             return response.data;
         } catch (error) {
             const err = error as Error;
-            thunkAPI.rejectWithValue(err.message);
+            return thunkAPI.rejectWithValue(err.message);
         }
     }
 )

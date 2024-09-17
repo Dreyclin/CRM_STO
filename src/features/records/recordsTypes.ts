@@ -3,6 +3,7 @@ import { AutoServiceCredentials } from "../models/autoServiceModel"
 export interface Record {
     _id: string | null,
     clientId: string,
+    day: Date,
     car: string,
     carNumber: string,
     description: string,
@@ -30,6 +31,7 @@ export enum StatusEnum {
 
 export interface RecordCredentials extends AutoServiceCredentials {
     recordId: string,
+    day: Date | null,
     status: string | null
 }
 

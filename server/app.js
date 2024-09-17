@@ -148,46 +148,56 @@ app.post('/loadRecords', async (req, res) => {
             res.status(200).json({ days: null });
         }
     } catch (error) {
-        res.status(500).json({ message: "Ошибка на сервере" })
+        res.status(401).json({ message: "Ошибка на сервере" })
     }
 })
 
-// app.post('/changeStatus', async (req, res) => {
-//     try {
-//         const autoServiceId = req.body.id;
-//         const recordId = req.body.recordId;
-//         const status = req.body.status;
-//         const autoService = await AutoService.findOne({_id: autoServiceId});
+app.post('/changeStatus', async (req, res) => {
+    try {
+        const autoServiceId = req.body.autoServiceId;
+        const date = new Date(req.body.day);
+        const recordId = req.body.recordId;
+        const status = req.body.status;
+        const autoService = await AutoService.findOne({_id: autoServiceId});
 
-//         if(autoService){
-//             const record = await autoService.records.id(recordId);
-//             if(record) {
-//                 if(status){
-//                     record.status = status;
-//                 } else {
-//                     if(record.status === "Новый") {
-//                         record.status = "В работе";
-//                     } else if (record.status === "В работе") {
-//                         record.status = "Ждет клиента";
-//                     } else if (record.status === "Ждет клиента") {
-//                         record.status = "Новый";
-//                     }
-//                 }
-//                 autoService.save().then(() => {
-//                     res.status(200).json(autoService.records);
-//                 });
+        if(autoService){
+            const dayIndex = autoService.days.findIndex(day => new Date(day.dayDate).getTime() === date.getTime())
+            console.log(dayIndex);
+            if(dayIndex != -1){
+                const record = autoService.days[dayIndex].records.id(recordId);
+                if(record) {
+                    if(status){
+                        record.status = status;
+                    } else {
+                        if(record.status === "Новый") {
+                            record.status = "В работе";
+                        } else if (record.status === "В работе") {
+                            record.status = "Ждет клиента";
+                        } else if (record.status === "Ждет клиента") {
+                            record.status = "Новый";
+                        }
+                    }
 
-//             } else {
-//                 res.status(400).json({message: "Запись не найдена!"});
-//             } 
-//         } else {
-//             res.status(400).json({message: "Автосервис не найден!"});
-//         }
-//     } catch (error) {
-//         res.status(401).json({message: "Ошибка на сервере"});
-//     }
+                    autoService.days[dayIndex].records = autoService.days[dayIndex].records.filter(r => r.status !== "Закрыт");
+                    autoService.days = autoService.days.filter(day => day.records.length > 0);
 
-// })
+                    autoService.save().then(() => {
+                        res.status(200).json(autoService.days);
+                    });
+                } else {
+                    res.status(400).json({message: "Запись не найдена!"});
+                } 
+            } else {
+                res.status(400).json({message: "День не найден!"});
+            }
+        } else {
+            res.status(400).json({message: "Автосервис не найден!"});
+        }
+    } catch (error) {
+        res.status(401).json({message: "Ошибка на сервере"});
+    }
+
+})
 
 app.post("/addRecord", async (req, res) => {
     try {
@@ -244,7 +254,28 @@ app.post("/addRecord", async (req, res) => {
 
 
 
+app.post('/insertClient', async(req, res) => {
+    const autoServiceId = "66e0c28ee88edebd3a68e923";
 
+    const newClient = new Client({
+        name: "Максим",
+        phoneNumber: ["+380673664557"],
+        car: {
+            brand: "BMW",
+            model: "X6",
+            number: "AP5372XP"
+        },
+        personalDiscount: "5%"
+    })
+
+    const autoService = await AutoService.findOne({_id: autoServiceId});
+
+    if(autoService) {
+        autoService.clients.push(newClient);
+        await autoService.save();
+        console.log("ADDED CLIENT!");
+    }
+})
 
 
 app.post('/insertData', async (req, res) => {
