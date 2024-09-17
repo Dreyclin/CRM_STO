@@ -246,6 +246,21 @@ app.post("/addRecord", async (req, res) => {
    
 })
 
+app.post("/loadClients", async(req, res) => {
+    try {
+        const autoServiceId =  req.body.autoServiceId;
+        const autoService = await AutoService.findOne({_id: autoServiceId});
+    
+        if(autoService) {
+            res.status(200).json(autoService.clients);
+        } else {
+            res.status(401).json({message: "Нет автосервиса"})
+        }
+    } catch (error) {
+        res.status(500).json({message: "Ошибка на сервере"})
+    }
+})
+
 
 
 
@@ -258,14 +273,14 @@ app.post('/insertClient', async(req, res) => {
     const autoServiceId = "66e0c28ee88edebd3a68e923";
 
     const newClient = new Client({
-        name: "Максим",
-        phoneNumber: ["+380673664557"],
+        name: "Дмитрий",
+        phoneNumber: ["+380934626914"],
         car: {
-            brand: "BMW",
+            brand: "Mazda",
             model: "X6",
-            number: "AP5372XP"
+            number: "AP2172XP"
         },
-        personalDiscount: "5%"
+        personalDiscount: 15
     })
 
     const autoService = await AutoService.findOne({_id: autoServiceId});
