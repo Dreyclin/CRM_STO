@@ -1,20 +1,18 @@
 import React from "react";
-import { Client } from "../../features/clients/clientsTypes";
+import { useClients } from "../../hooks/useClients";
+import { useModal } from "../../hooks/useModal";
 
 
-interface ClientsProps {
-    clients: Client[]
-}
+const Clients: React.FC = () => {
 
-
-const Clients: React.FC<ClientsProps> = ({clients}) => {
-
-
+    const {filteredClients, phone, setPhone} = useClients();
+    console.log(filteredClients);
+    const {toggle} = useModal();
     return (
         <div className="w-100 d-flex flex-column gap-4">
             <div className="input-container d-flex justify-content-between">
-                <input type="text" placeholder="Поиск по номеру телефона" className="form-control w-15" />
-                <button className="btn btn-success">Добавить клиента</button>
+                <input type="text" placeholder="Поиск по номеру телефона" className="form-control w-15" value={phone} onChange={(e) => setPhone(e.target.value)}/>
+                <button className="btn btn-success" onClick={toggle}>Добавить клиента</button>
             </div>
             <table className="table table-bordered text-center">
                 <thead className="thead-light">
@@ -26,60 +24,28 @@ const Clients: React.FC<ClientsProps> = ({clients}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Mark</td>
-                        <td>+380673664557</td>
-                        <td>
-                            <table className="table table-bordered mb-0">
-                                <tbody>
-                                    <tr>
-                                        <td>BMW</td>
-                                        <td>X6</td>
-                                    </tr>
-                                    <tr>
-                                        <td colSpan={2}>AP67826AB</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                        <td>5%</td>
-                    </tr>
-                    <tr>
-                        <td>Jacob</td>
-                        <td>+380673664557</td>
-                        <td>
-                            <table className="table table-bordered mb-0">
-                                <tbody>
-                                    <tr>
-                                        <td>BMW</td>
-                                        <td>X6</td>
-                                    </tr>
-                                    <tr>
-                                        <td colSpan={2}>AP67826AB</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                        <td>10%</td>
-                    </tr>
-                    <tr>
-                        <td>Larry</td>
-                        <td>+380673664557</td>
-                        <td>
-                            <table className="table table-bordered mb-0">
-                                <tbody>
-                                    <tr>
-                                        <td>BMW</td>
-                                        <td>X6</td>
-                                    </tr>
-                                    <tr>
-                                        <td colSpan={2}>AP67826AB</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                        <td>15%</td>
-                    </tr>
+                    {filteredClients && filteredClients.map(client => {
+                        return (
+                            <tr>
+                                <td>{client.name}</td>
+                                <td>{client.phoneNumber?.map(number => {return <p>{number}</p>})}</td>
+                                <td>
+                                    <table className="table table-bordered mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <td>{client.car.brand}</td>
+                                                <td>{client.car.model}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colSpan={2}>{client.car.number}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>{client.personalDiscount}%</td>
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </table>
         </div>

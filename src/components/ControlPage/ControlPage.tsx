@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
 import List from "../List/List";
 import Records from "../Records/Records";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../app/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/store";
 import { checkAuth } from "../../features/auth/authThunks";
 import { useNavigate } from "react-router-dom";
 import Clients from "../Clients/Clients";
@@ -11,13 +11,11 @@ import Modal from "../Records/Modal/Modal";
 import { useModal } from "../../hooks/useModal";
 import ModalHeader from "../Records/Modal/ModalHeader";
 import ModalContent from "../Records/Modal/ModalContent";
+import ClientsModal from "../Clients/ClientsModal";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
     const dispatch: AppDispatch = useDispatch();
-    const clients = useSelector((state: RootState) => state.client.clients)
-    
-    console.log(clients);
 
     const navigate = useNavigate();
     
@@ -40,12 +38,16 @@ const ControlPage: React.FC = () => {
                 <div className="d-flex container gap-5">
                     <List navChange={handleTitleChange} activeTab={title} />
                     {title === "Запись" ? <Records /> : null}
-                    {/* {title === "Клиенты" ? <Clients /> : null} */}
+                    {title === "Клиенты" ? <Clients /> : null}
                 </div>
-                <Modal isOpen={isOpen} toggle={toggle}>
-                    <ModalHeader/>
+                {title === "Запись" && <Modal isOpen={isOpen} toggle={toggle}>
+                    <ModalHeader modalTitle="Записать"/>
                     <ModalContent/>
-                </Modal>
+                </Modal>}
+                {title === "Клиенты" && <Modal isOpen={isOpen} toggle={toggle}>
+                    <ModalHeader modalTitle="Создать"/>
+                    <ClientsModal />
+                </Modal>}
             </div>
     )
 

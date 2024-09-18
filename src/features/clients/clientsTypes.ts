@@ -1,4 +1,6 @@
-export interface Client {
+import { AutoServiceCredentials } from "../models/autoServiceModel"
+
+export interface Client extends AutoServiceCredentials {
     name: string | null,
     phoneNumber: string[] | null,
     car: {

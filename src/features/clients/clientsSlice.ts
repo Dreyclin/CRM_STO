@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Client, ClientsState } from "./clientsTypes";
-import { addClient } from "./clientsThunks";
+import { ClientsState } from "./clientsTypes";
+import { addClient, loadClients } from "./clientsThunks";
 
 const initialState: ClientsState = {
     clients: null,
@@ -19,9 +19,18 @@ const clientsSlice = createSlice({
     })
     .addCase(addClient.fulfilled, (state, action) => {
         state.clients = action.payload;
+        state.status = "succeeded"
     })
     .addCase(addClient.rejected, (state, action) => {
         state.error = action.payload as string
+        state.status = "failed"
+    })
+    .addCase(loadClients.pending, state => {
+        state.status = "loading"
+    })
+    .addCase(loadClients.fulfilled, (state, action) => {
+        state.clients = action.payload;
+        state.status = "succeeded"
     })
     }
 
