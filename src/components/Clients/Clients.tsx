@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useClients } from "../../hooks/useClients";
 import { useModal } from "../../hooks/useModal";
+import { Client } from "../../features/clients/clientsTypes";
 
+interface ClientsProps {
+    onEditClient: (client: Client | null) => void;
+}
 
-const Clients: React.FC = () => {
+const Clients: React.FC<ClientsProps> = ({onEditClient}) => {
 
     const {filteredClients, phone, setPhone} = useClients();
-    console.log(filteredClients);
     const {toggle} = useModal();
+
     return (
         <div className="w-100 d-flex flex-column gap-4">
             <div className="input-container d-flex justify-content-between">
                 <input type="text" placeholder="Поиск по номеру телефона" className="form-control w-15" value={phone} onChange={(e) => setPhone(e.target.value)}/>
-                <button className="btn btn-success" onClick={toggle}>Добавить клиента</button>
+                <button className="btn btn-success" onClick={() => onEditClient(null)}>Добавить клиента</button>
             </div>
             <table className="table table-bordered text-center">
                 <thead className="thead-light">
@@ -26,7 +30,7 @@ const Clients: React.FC = () => {
                 <tbody>
                     {filteredClients && filteredClients.map(client => {
                         return (
-                            <tr>
+                            <tr onClick={() => onEditClient(client)}>
                                 <td>{client.name}</td>
                                 <td>{client.phoneNumber?.map(number => {return <p>{number}</p>})}</td>
                                 <td>

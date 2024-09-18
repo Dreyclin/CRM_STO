@@ -12,15 +12,21 @@ import { useModal } from "../../hooks/useModal";
 import ModalHeader from "../Records/Modal/ModalHeader";
 import ModalContent from "../Records/Modal/ModalContent";
 import ClientsModal from "../Clients/ClientsModal";
+import { Client } from "../../features/clients/clientsTypes";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
     const dispatch: AppDispatch = useDispatch();
-
+    const [selectedClient, setSelectedClient] = useState<Client | null>();
     const navigate = useNavigate();
     
-    
     const { isOpen, toggle } = useModal();
+
+    const handleEditClient = (client: Client | null) => {
+        setSelectedClient(client);
+        toggle();
+    };
+
     useEffect(() => {
         dispatch(checkAuth()).unwrap().catch(() => {
             navigate('/');
@@ -38,7 +44,7 @@ const ControlPage: React.FC = () => {
                 <div className="d-flex container gap-5">
                     <List navChange={handleTitleChange} activeTab={title} />
                     {title === "Запись" ? <Records /> : null}
-                    {title === "Клиенты" ? <Clients /> : null}
+                    {title === "Клиенты" ? <Clients onEditClient={handleEditClient}/> : null}
                 </div>
                 {title === "Запись" && <Modal isOpen={isOpen} toggle={toggle}>
                     <ModalHeader modalTitle="Записать"/>
@@ -46,7 +52,7 @@ const ControlPage: React.FC = () => {
                 </Modal>}
                 {title === "Клиенты" && <Modal isOpen={isOpen} toggle={toggle}>
                     <ModalHeader modalTitle="Создать"/>
-                    <ClientsModal />
+                    <ClientsModal client={selectedClient} toggle={toggle}/>
                 </Modal>}
             </div>
     )

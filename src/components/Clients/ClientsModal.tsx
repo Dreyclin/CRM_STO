@@ -1,44 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useModal } from "../../hooks/useModal";
 import { Client } from "../../features/clients/clientsTypes";
 import { AppDispatch } from "../../app/store";
 import { useDispatch } from "react-redux";
 import { addClient } from "../../features/clients/clientsThunks";
+import { useClientsModal } from "../../hooks/useClientsModal";
 
-const ClientsModal: React.FC = () => {
+interface ClientsModalProps {
+    client? : Client | null,
+    toggle: () => void
+}
 
-    const { toggle } = useModal();
-    const dispatch: AppDispatch = useDispatch();
-    const [name, setName] = useState<string>('');
-    const [mark, setMark] = useState<string>('');
-    const [model, setModel] = useState<string>('');
-    const [numbers, setNumbers] = useState<string>('');
-    const [phonePrimary, setPhonePrimary] = useState<string>('');
-    const [phoneSecondary, setPhoneSecondary] = useState<string>('');
-    const [personalDiscount, setPersonalDiscount] = useState<number>(0);
+const ClientsModal: React.FC<ClientsModalProps> = ({client, toggle}) => {
 
-    function handleSubmit() {
-        if(!name || !mark || !model || !numbers || !phonePrimary || personalDiscount < 0) {
-            alert("Заполните все поля!")
-        } else {
-            const credentials: Client = {
-                name: name,
-                car: {
-                    brand: mark,
-                    model: model,
-                    number: numbers
-                },
-                phoneNumber: [phonePrimary, phoneSecondary],
-                personalDiscount: personalDiscount,
-                autoServiceId: localStorage.getItem("autoServiceId")
-            }
-
-            dispatch(addClient(credentials)).catch(err => {
-                alert(err);
-            })
-            toggle();
-        }
-    }
+    const {name, mark, model, numbers, phonePrimary, phoneSecondary, personalDiscount, setName, setMark, setModel, setNumbers, setPhonePrimary, setPhoneSecondary, setPersonalDiscount, handleSubmit} = useClientsModal(client || null, toggle)
 
     return (
         <div className="">
@@ -65,7 +40,7 @@ const ClientsModal: React.FC = () => {
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={toggle}>Закрыть</button>
-                <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Добавить</button>
+                <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Сохранить</button>
             </div>
         </div>
     )

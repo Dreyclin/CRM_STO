@@ -11,7 +11,8 @@ export const useClients = () => {
     const dispatch: AppDispatch = useDispatch();
     const [filteredClients, setFilteredClients] = useState<Client[]>([]);
     const [phone, setPhone] = useState<string>('');
-
+    
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     useEffect(() => {
         const credentials: AutoServiceCredentials = {
             autoServiceId: localStorage.getItem("autoServiceId")
@@ -29,5 +30,5 @@ export const useClients = () => {
         }
     }, [clients, phone]);
 
-    return {filteredClients, phone, setPhone}
+    return {filteredClients, phone, isOpen, setPhone}
 }
