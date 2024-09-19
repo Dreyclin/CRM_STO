@@ -297,6 +297,45 @@ app.post("/addClient", async(req, res) => {
     }
 })
 
+app.post("/updateClient", async (req, res) => {
+    try {
+        const autoServiceId = req.body.autoServiceId;
+        const clientId = req.body._id;
+        console.log(autoServiceId, clientId);
+        const name = req.body.name;
+        const brand = req.body.car.brand;
+        const model = req.body.car.model;
+        const numbers = req.body.car.number;
+        const phoneNumbers = req.body.phoneNumber;
+        const personalDiscount = req.body.personalDiscount;
+    
+        const autoService = await AutoService.findOne({_id: autoServiceId});
+    
+        if(autoService){
+            const client = await autoService.clients.id(clientId);
+            if(client){
+                client.name = name;
+                client.phoneNumber = phoneNumbers;
+                client.car = {
+                    brand: brand,
+                    model: model,
+                    number: numbers
+                };
+                client.personalDiscount = personalDiscount;
+        
+                await autoService.save();
+                res.status(200).json(autoService.clients);
+            } else {
+                res.status(401).json("Клиент не найден!");
+            }
+          
+        } else {
+            res.status(401).json({message: "Автосервис не найден"})
+        }
+    } catch (error) {
+        res.status(500).json({message: "Ошибка на сервере!"})
+    }
+})
 
 
 

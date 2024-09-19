@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Client } from "../features/clients/clientsTypes";
-import { addClient } from "../features/clients/clientsThunks";
+import { addClient, updateClient } from "../features/clients/clientsThunks";
 import { AppDispatch } from "../app/store";
 import { useDispatch } from "react-redux";
 
@@ -32,7 +32,7 @@ export const useClientsModal = (client: Client | null, toggle: () => void) => {
             alert("Заполните все поля!")
         } else if(!client) {
             const credentials: Client = {
-                id: null,
+                _id: null,
                 name: name,
                 car: {
                     brand: mark,
@@ -49,8 +49,9 @@ export const useClientsModal = (client: Client | null, toggle: () => void) => {
             })
             toggle();
         } else {
+            console.log(client);
             const credentials: Client = {
-                id: client.id,
+                _id: client._id,
                 name: name,
                 car: {
                     brand: mark,
@@ -61,6 +62,11 @@ export const useClientsModal = (client: Client | null, toggle: () => void) => {
                 personalDiscount: personalDiscount,
                 autoServiceId: localStorage.getItem("autoServiceId")
             }
+
+            dispatch(updateClient(credentials)).catch(err => {
+                alert(err);
+            })
+            toggle();
         }
     }
 

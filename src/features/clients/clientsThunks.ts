@@ -29,3 +29,16 @@ export const loadClients = createAsyncThunk(
         }
     }
 )
+
+export const updateClient = createAsyncThunk(
+    'clients/update',
+    async(credentials: Client, thunkAPI) => {
+        try {
+            const response = await axios.post<Client[]>('http://localhost:5000/updateClient', credentials);
+            return response.data;
+        } catch (error) {
+            const err = error as Error;
+            return thunkAPI.rejectWithValue(err.message);
+        }
+    }
+)

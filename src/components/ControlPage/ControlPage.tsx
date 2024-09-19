@@ -56,8 +56,6 @@ const ControlPage: React.FC = () => {
                 </Modal>}
             </div>
     )
-
-
 }
 
 export default ControlPage;

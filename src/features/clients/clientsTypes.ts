@@ -1,7 +1,7 @@
 import { AutoServiceCredentials } from "../models/autoServiceModel"
 
 export interface Client extends AutoServiceCredentials {
-    id: string | null
+    _id: string | null
     name: string | null,
     phoneNumber: string[] | null,
     car: {
