@@ -1,83 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useModal } from "../../../hooks/useModal";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../app/store";
-import { addRecord } from "../../../features/records/recordsThunks";
-import { NewRecord } from "../../../features/records/recordsTypes";
-import { loadClients } from "../../../features/clients/clientsThunks";
-import { AutoServiceCredentials } from "../../../features/models/autoServiceModel";
-import { Client } from "../../../features/clients/clientsTypes";
+import React from "react";
+import { useRecordsModal } from "../../../hooks/useRecordsModal";
 
 const ModalContent: React.FC = () => {
-    const dateInputRef = useRef<HTMLInputElement>(null);
 
-    const dispatch: AppDispatch = useDispatch();
-
-    const { toggle } = useModal();
-    const clients = useSelector((state: RootState) => state.client.clients)
-    const [selectedClient, setSelectedClient] = useState<Client>();
-    const [clientDropdown, setClientDropdown] = useState<boolean>(false);
-
-    const [client, setClient] = useState<string>('');
-    const [markModel, setMarkModel] = useState<string>('');
-    const [numbers, setNumbers] = useState<string>('');
-    const [description, setDescription] = useState<string>('');
-    const [date, setDate] = useState<string>('');
-    const [from, setFrom] = useState<number>(0);
-    const [to, setTo] = useState<number>(0);
-
-
-    useEffect(() => {
-        const credentials : AutoServiceCredentials = {
-            autoServiceId: localStorage.getItem("autoServiceId")
-        }
-        dispatch(loadClients(credentials)).catch(err => {
-            alert(err)
-        })
-    }, [dispatch])
-
-    function handleCalendar() {
-        dateInputRef.current?.showPicker();
-    }
-
-    function handleClient(client: Client) {
-        console.log(client);
-        setClient(client.name || '');
-        setMarkModel(client.car.brand + " " + client.car.model);
-        setNumbers(client.car.number || '');
-        setClientDropdown(false);
-    }
-
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDate(e.target.value);
-    };
-
-
-    const handleSubmit = () => {
-        if (!client || !markModel || !numbers || !description || !date || from === 0 || to === 0) {
-            alert("Заполните все поля!");
-        } else {
-            const credentials: NewRecord = {
-                client: client,
-                car: markModel,
-                carNumber: numbers,
-                description: description,
-                date: date,
-                duration: {
-                    from: from,
-                    to: to
-                },
-                status: "Новый",
-                autoServiceId: localStorage.getItem("autoServiceId")
-            }
-
-            dispatch(addRecord(credentials)).catch(err => {
-                alert(err);
-            });
-
-            toggle();
-        }
-    };
+    const {dateInputRef, clientDropdownRef, toggle, clients, selectedClient, clientDropdown, client, markModel, numbers, description, date, from, to,
+        setSelectedClient, setClientDropdown, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
+    } = useRecordsModal()
 
     return (
         <div className="">
@@ -87,11 +15,12 @@ const ModalContent: React.FC = () => {
                         <span className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people-fill" viewBox="0 0 16 16">
                             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
                         </svg></span>
-                        <input type="text" placeholder="Клиент" className="form-control" required value={client} onChange={(e) => setClient(e.target.value)} onBlur={(e) => setClientDropdown(false)} onFocus={(e) => setClientDropdown(true)}/>
+                        <input type="text" placeholder="Клиент(поиск по номеру телефона)" className="form-control" required value={client} onChange={(e) => {setClient(e.target.value); setSelectedClient(undefined)}} onFocus={(e) => {setClientDropdown(true)}}/>
                         {clientDropdown && 
-                        <div className="client-block">
-                           {clients && clients.map(client => {
-                                return <div className="client-item p-2 d-flex align-items-center justify-content-around" onClick={() => handleClient(client)}>
+                        <div className="client-block" ref={clientDropdownRef}>
+                           {clients && clients.map((client, index) => {
+                                   console.log(client)
+                                return <div key={index} className="client-item p-2 d-flex align-items-center justify-content-around" onClick={() => setSelectedClient(client)}>
                                     <p>{client.name}</p>
                                     <div className="numbers">
                                         {client.phoneNumber && client.phoneNumber.map(number => <p>{number}</p>)}
@@ -102,7 +31,7 @@ const ModalContent: React.FC = () => {
                     </div>
                     <div className="d-flex gap-2">
                         <button className="btn btn-success fw-bold">+</button>
-                        <button className="btn btn-primary fw-bold">К.П.</button>
+                        <button className="btn btn-primary fw-bold" onClick={() => setClient("К.П.")}>К.П.</button>
                     </div>
                 </div>
                 <div className="d-flex justify-content-between gap-3 w-100">

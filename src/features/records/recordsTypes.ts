@@ -2,6 +2,7 @@ import { AutoServiceCredentials } from "../models/autoServiceModel"
 
 export interface Record {
     _id: string | null,
+    clientName: string,
     clientId: string,
     day: Date,
     car: string,
@@ -41,6 +42,7 @@ export interface DaysRecords {
 }
 
 export interface NewRecord extends AutoServiceCredentials{
+    clientId: string | null
     client: string,
     car: string,
     carNumber: string,

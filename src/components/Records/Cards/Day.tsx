@@ -20,7 +20,7 @@ const Day: React.FC<DayCardProps> = ({day}) => {
                     key={key}
                     status={record.status}
                     id={record._id ? record._id : "no-id"}
-                    client={record.clientId}
+                    client={record.clientName}
                     day={day && day.dayDate}
                 />
             })}

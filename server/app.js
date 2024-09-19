@@ -33,6 +33,7 @@ const clientSchema = mongoose.Schema({
     personalDiscount: Number
 })
 const recordSchema = mongoose.Schema({
+    clientName: String,
     clientId: String,
     car: String,
     carNumber: String,
@@ -203,6 +204,7 @@ app.post("/addRecord", async (req, res) => {
     try {
         const autoServiceId = req.body.autoServiceId;
         const client = req.body.client;
+        const clientId = req.body.clientId;
         const car = req.body.car;
         const carNumber = req.body.carNumber;
         const description = req.body.description;
@@ -213,7 +215,8 @@ app.post("/addRecord", async (req, res) => {
         const autoService = await AutoService.findOne({ _id: autoServiceId });
     
         const newRecord = new Record ({
-            clientId: client,
+            clientName: client,
+            clientId: clientId,
             car: car,
             carNumber: carNumber,
             description: description,
