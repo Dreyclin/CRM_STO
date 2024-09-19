@@ -63,3 +63,22 @@ tr:hover {
 textarea {
     resize: none
 }
+
+.client-block {
+    background-color: #fff;
+    border: 1px solid black;
+    border-radius: 5px!important;
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    top: 100%;
+}
+
+.client-item:not(:last-child) {
+    border-bottom: 1px solid black;
+}
+
+.client-item:hover {
+    cursor: pointer;
+    background-color: #d8d8d8;
+}

@@ -1,9 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useModal } from "../../../hooks/useModal";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../app/store";
 import { addRecord } from "../../../features/records/recordsThunks";
 import { NewRecord } from "../../../features/records/recordsTypes";
+import { loadClients } from "../../../features/clients/clientsThunks";
+import { AutoServiceCredentials } from "../../../features/models/autoServiceModel";
+import { Client } from "../../../features/clients/clientsTypes";
 
 const ModalContent: React.FC = () => {
     const dateInputRef = useRef<HTMLInputElement>(null);
@@ -11,7 +14,9 @@ const ModalContent: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
 
     const { toggle } = useModal();
-
+    const clients = useSelector((state: RootState) => state.client.clients)
+    const [selectedClient, setSelectedClient] = useState<Client>();
+    const [clientDropdown, setClientDropdown] = useState<boolean>(false);
 
     const [client, setClient] = useState<string>('');
     const [markModel, setMarkModel] = useState<string>('');
@@ -21,8 +26,26 @@ const ModalContent: React.FC = () => {
     const [from, setFrom] = useState<number>(0);
     const [to, setTo] = useState<number>(0);
 
+
+    useEffect(() => {
+        const credentials : AutoServiceCredentials = {
+            autoServiceId: localStorage.getItem("autoServiceId")
+        }
+        dispatch(loadClients(credentials)).catch(err => {
+            alert(err)
+        })
+    }, [dispatch])
+
     function handleCalendar() {
         dateInputRef.current?.showPicker();
+    }
+
+    function handleClient(client: Client) {
+        console.log(client);
+        setClient(client.name || '');
+        setMarkModel(client.car.brand + " " + client.car.model);
+        setNumbers(client.car.number || '');
+        setClientDropdown(false);
     }
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,13 +75,6 @@ const ModalContent: React.FC = () => {
                 alert(err);
             });
 
-            console.log("Client:", client);
-            console.log("Mark and Model:", markModel);
-            console.log("Numbers:", numbers);
-            console.log("Description:", description);
-            console.log("Date:", date);
-            console.log("From:", from);
-            console.log("To:", to);
             toggle();
         }
     };
@@ -66,11 +82,28 @@ const ModalContent: React.FC = () => {
     return (
         <div className="">
             <div className="py-3 d-flex flex-column justify-content-center align-items-center w-80 px-3 gap-3">
-                <div className="input-group">
-                    <span className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people-fill" viewBox="0 0 16 16">
-                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                    </svg></span>
-                    <input type="text" placeholder="Клиент" className="form-control" required value={client} onChange={(e) => setClient(e.target.value)} />
+                <div className="w-100 d-flex gap-2">
+                    <div className="input-group">
+                        <span className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people-fill" viewBox="0 0 16 16">
+                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                        </svg></span>
+                        <input type="text" placeholder="Клиент" className="form-control" required value={client} onChange={(e) => setClient(e.target.value)} onBlur={(e) => setClientDropdown(false)} onFocus={(e) => setClientDropdown(true)}/>
+                        {clientDropdown && 
+                        <div className="client-block">
+                           {clients && clients.map(client => {
+                                return <div className="client-item p-2 d-flex align-items-center justify-content-around" onClick={() => handleClient(client)}>
+                                    <p>{client.name}</p>
+                                    <div className="numbers">
+                                        {client.phoneNumber && client.phoneNumber.map(number => <p>{number}</p>)}
+                                    </div>
+                                </div>
+                           })}
+                        </div>}
+                    </div>
+                    <div className="d-flex gap-2">
+                        <button className="btn btn-success fw-bold">+</button>
+                        <button className="btn btn-primary fw-bold">К.П.</button>
+                    </div>
                 </div>
                 <div className="d-flex justify-content-between gap-3 w-100">
                     <input type="text" className="form-control" placeholder="Марка и модель" required value={markModel} onChange={(e) => setMarkModel(e.target.value)} />

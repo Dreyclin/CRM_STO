@@ -23,7 +23,7 @@ const Record: React.FC<RecordProps> = ({duration, car, description, status, id, 
                 <h5 className="mb-0">{duration.from}:00-{duration.to}:00</h5>
                 <div className="badges d-flex gap-2">
                     <div className={getBadgeClass(status)} onClick={() => handleStatusClick(id, null, day)}>{status}</div>
-                    <div className="badge bg-primary">Подъемник</div>
+                    {/* <div className="badge bg-primary">Подъемник</div> */}
                 </div>
    
             </div>
