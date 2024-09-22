@@ -21,7 +21,7 @@ const ControlPage: React.FC = () => {
     const navigate = useNavigate();
     
     const { isOpen, toggle } = useModal();
-
+    const [isClientsModalOpen, setIsClientsModalOpen] = useState(false); 
     const handleEditClient = (client: Client | null) => {
         setSelectedClient(client);
         toggle();
@@ -38,6 +38,10 @@ const ControlPage: React.FC = () => {
         setTitle(target.innerHTML);
     }
 
+    const toggleClientsModal = () => {
+        setIsClientsModalOpen(!isClientsModalOpen);
+    }
+
     return (
             <div className="">
                 <Header title={title} />
@@ -46,9 +50,14 @@ const ControlPage: React.FC = () => {
                     {title === "Запись" ? <Records /> : null}
                     {title === "Клиенты" ? <Clients onEditClient={handleEditClient}/> : null}
                 </div>
-                {title === "Запись" && <Modal isOpen={isOpen} toggle={toggle}>
+                {(title === "Запись" && !isClientsModalOpen) && <Modal isOpen={isOpen} toggle={toggle}>
                     <ModalHeader modalTitle="Записать"/>
-                    <ModalContent/>
+                    <ModalContent toggleClientModal={toggleClientsModal}/>
+                </Modal>}
+                {(title === "Запись" && isClientsModalOpen) && 
+                <Modal isOpen={isClientsModalOpen} toggle={toggleClientsModal}>
+                    <ModalHeader modalTitle="Создать"/>
+                    <ClientsModal client={null} toggle={toggleClientsModal}/>
                 </Modal>}
                 {title === "Клиенты" && <Modal isOpen={isOpen} toggle={toggle}>
                     <ModalHeader modalTitle="Создать"/>

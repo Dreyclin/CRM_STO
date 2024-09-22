@@ -1,7 +1,11 @@
 import React from "react";
 import { useRecordsModal } from "../../../hooks/useRecordsModal";
 
-const ModalContent: React.FC = () => {
+interface ModalRecordsProps {
+    toggleClientModal: () => void
+}
+
+const ModalContent: React.FC<ModalRecordsProps> = ({toggleClientModal}) => {
 
     const {dateInputRef, clientDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
         setSelectedClient, setClientDropdown, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
@@ -30,7 +34,7 @@ const ModalContent: React.FC = () => {
                         </div>}
                     </div>
                     <div className="d-flex gap-2">
-                        <button className="btn btn-success fw-bold">+</button>
+                        <button className="btn btn-success fw-bold" onClick={() => toggleClientModal()}>+</button>
                         <button className="btn btn-primary fw-bold" onClick={() => {setClient("К.П."); setSelectedClient(null)}}>К.П.</button>
                     </div>
                 </div>
@@ -57,10 +61,9 @@ const ModalContent: React.FC = () => {
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={toggle}>Закрыть</button>
-                <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Добавить</button>
+                <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Сохранить</button>
             </div>
         </div>
-
     )
 }
 

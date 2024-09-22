@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useModal } from "../../hooks/useModal";
+import React from "react";
 import { Client } from "../../features/clients/clientsTypes";
-import { AppDispatch } from "../../app/store";
-import { useDispatch } from "react-redux";
-import { addClient } from "../../features/clients/clientsThunks";
 import { useClientsModal } from "../../hooks/useClientsModal";
 
 interface ClientsModalProps {
@@ -12,7 +8,7 @@ interface ClientsModalProps {
 }
 
 const ClientsModal: React.FC<ClientsModalProps> = ({client, toggle}) => {
-
+  
     const {name, mark, model, numbers, phonePrimary, phoneSecondary, personalDiscount, setName, setMark, setModel, setNumbers, setPhonePrimary, setPhoneSecondary, setPersonalDiscount, handleSubmit} = useClientsModal(client || null, toggle)
 
     return (
@@ -42,6 +38,7 @@ const ClientsModal: React.FC<ClientsModalProps> = ({client, toggle}) => {
                 <button type="button" className="btn btn-secondary" onClick={toggle}>Закрыть</button>
                 <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Сохранить</button>
             </div>
+
         </div>
     )
 }
