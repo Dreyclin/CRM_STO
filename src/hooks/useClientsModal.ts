@@ -49,7 +49,6 @@ export const useClientsModal = (client: Client | null, toggle: () => void) => {
             })
             toggle();
         } else {
-            console.log(client);
             const credentials: Client = {
                 _id: client._id,
                 name: name,

@@ -18,7 +18,7 @@ export const useRecordsModal = () => {
 
     const { toggle } = useModal();
     const clients = useSelector((state: RootState) => state.client.clients)
-    const [selectedClient, setSelectedClient] = useState<Client | undefined>();
+    const [selectedClient, setSelectedClient] = useState<Client | null>();
     const [clientDropdown, setClientDropdown] = useState<boolean>(false);
     
     const [filteredClients, setFilteredClients] = useState<Client[]>([]);
@@ -61,10 +61,13 @@ export const useRecordsModal = () => {
 
     useEffect(() => {
         if(selectedClient){
-            console.log(selectedClient);
             setClient(selectedClient.name || '');
             setMarkModel(selectedClient.car.brand + " " + selectedClient.car.model);
             setNumbers(selectedClient.car.number || '');
+            setClientDropdown(false);
+        } else {
+            setMarkModel("");
+            setNumbers('');
             setClientDropdown(false);
         }
     }, [selectedClient])

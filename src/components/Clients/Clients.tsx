@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { useClients } from "../../hooks/useClients";
-import { useModal } from "../../hooks/useModal";
 import { Client } from "../../features/clients/clientsTypes";
 
 interface ClientsProps {
@@ -10,7 +9,6 @@ interface ClientsProps {
 const Clients: React.FC<ClientsProps> = ({onEditClient}) => {
 
     const {filteredClients, phone, setPhone} = useClients();
-    const {toggle} = useModal();
 
     return (
         <div className="w-100 d-flex flex-column gap-4">

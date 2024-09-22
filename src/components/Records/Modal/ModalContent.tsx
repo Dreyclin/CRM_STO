@@ -3,7 +3,7 @@ import { useRecordsModal } from "../../../hooks/useRecordsModal";
 
 const ModalContent: React.FC = () => {
 
-    const {dateInputRef, clientDropdownRef, toggle, clients, selectedClient, clientDropdown, client, markModel, numbers, description, date, from, to,
+    const {dateInputRef, clientDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
         setSelectedClient, setClientDropdown, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
     } = useRecordsModal()
 
@@ -31,7 +31,7 @@ const ModalContent: React.FC = () => {
                     </div>
                     <div className="d-flex gap-2">
                         <button className="btn btn-success fw-bold">+</button>
-                        <button className="btn btn-primary fw-bold" onClick={() => setClient("К.П.")}>К.П.</button>
+                        <button className="btn btn-primary fw-bold" onClick={() => {setClient("К.П."); setSelectedClient(null)}}>К.П.</button>
                     </div>
                 </div>
                 <div className="d-flex justify-content-between gap-3 w-100">
