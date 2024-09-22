@@ -12,7 +12,7 @@ const Day: React.FC<DayCardProps> = ({day}) => {
         <div className="card p-4">
         <p className="fw-bold h4 pb-3">{day.dayDate ? new Date(day.dayDate).toLocaleDateString("ru-RU", {day: 'numeric', month: 'long'}) : "Нет даты"}</p>
         <div className="records d-flex gap-4 flex-wrap">
-            {day.records && day.records.map((record, key) => {
+            {day.records !== null && day.records.map((record, key) => {
                 return <Record
                     car={record.car}
                     description={record.description}

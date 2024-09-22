@@ -47,31 +47,24 @@ const recordSchema = mongoose.Schema({
 })
 
 const autoServiceSchema = mongoose.Schema({
-    days: [{
-        dayDate: Date,
-        records: [recordSchema],
-    }
-    ],
-    clients: [clientSchema]
+    name: String,
+    days: {
+        type: [{
+            dayDate: Date,
+            records: [recordSchema],
+        }],
+        default: []
+    },
+    clients: {
+        type: [clientSchema],
+        default: []
+    } 
 })
 
 const User = mongoose.model("User", userSchema);
 const Record = mongoose.model("Record", recordSchema);
 const Client = mongoose.model("Client", clientSchema);
 const AutoService = mongoose.model("AutoService", autoServiceSchema);
-
-const newRecord = new Record({
-    clientId: '123',
-    autoServiceId: '66e0c28ee88edebd3a68e923',
-    car: "BMX X6",
-    description: "Замена масла, ТО, диагностика ходовки",
-    date: new Date().getDate(),
-    duration: {
-        from: 9,
-        to: 10
-    },
-    status: "Новый"
-})
 
 app.get('/', (req, res) => {
     console.log("Hello!");
@@ -343,46 +336,18 @@ app.post("/updateClient", async (req, res) => {
 
 
 
-
-
-
-app.post('/insertClient', async(req, res) => {
-    const autoServiceId = "66e0c28ee88edebd3a68e923";
-
-    const newClient = new Client({
-        name: "Дмитрий",
-        phoneNumber: ["+380934626914"],
-        car: {
-            brand: "Mazda",
-            model: "X6",
-            number: "AP2172XP"
-        },
-        personalDiscount: 15
-    })
-
-    const autoService = await AutoService.findOne({_id: autoServiceId});
-
-    if(autoService) {
-        autoService.clients.push(newClient);
+app.post('/insertAutoservice/:name', async (req, res) => {
+    try {
+        const autoService = new AutoService({ name: req.params.name });
         await autoService.save();
-        console.log("ADDED CLIENT!");
+        
+        console.log("AutoService successfully added");
+        res.status(201).json({ message: "AutoService successfully added", data: autoService });
+    } catch (error) {
+        console.error("Error adding AutoService:", error);
+        res.status(500).json({ message: "Failed to add AutoService", error: error.message });
     }
-})
-
-
-app.post('/insertData', async (req, res) => {
-    const autoService = await AutoService.findOne({ _id: '66e0c28ee88edebd3a68e923' });
-
-
-    const findDay = new Date("2024-11-10T22:00:00.000+00:00");
-    const dayIndex = autoService.days.findIndex(day => new Date(day.dayDate).getTime() === findDay.getTime())
-
-    autoService.days[dayIndex].records.push(newRecord);
-
-    autoService.save();
-
-    console.log("SUCCESS!");
-})
+});
 
 app.listen(5000, (req, res) => {
     console.log("APP IS LISTENING ON PORT 5000");
