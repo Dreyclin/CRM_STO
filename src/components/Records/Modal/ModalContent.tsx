@@ -23,7 +23,6 @@ const ModalContent: React.FC<ModalRecordsProps> = ({toggleClientModal}) => {
                         {clientDropdown && 
                         <div className="client-block" ref={clientDropdownRef}>
                            {clients && clients.map((client, index) => {
-                                   console.log(client)
                                 return <div key={index} className="client-item p-2 d-flex align-items-center justify-content-around" onClick={() => setSelectedClient(client)}>
                                     <p>{client.name}</p>
                                     <div className="numbers">

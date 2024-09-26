@@ -46,6 +46,13 @@ const recordSchema = mongoose.Schema({
     status: String
 })
 
+const optionsSchema = mongoose.Schema({
+    statusWorkOptions: {
+        type: [String],
+        default: ["Новый", "В работе", "Ждет клиента"]
+    }
+})
+
 const autoServiceSchema = mongoose.Schema({
     name: String,
     days: {
@@ -58,9 +65,16 @@ const autoServiceSchema = mongoose.Schema({
     clients: {
         type: [clientSchema],
         default: []
-    } 
+    },
+    options: {
+        type: optionsSchema,
+        default: {
+            statusWorkOptions: ["Новый", "В работе", "Ждет клиента"]
+        }
+    }
 })
 
+const Option = mongoose.model("Option", optionsSchema)
 const User = mongoose.model("User", userSchema);
 const Record = mongoose.model("Record", recordSchema);
 const Client = mongoose.model("Client", clientSchema);
@@ -153,25 +167,13 @@ app.post('/changeStatus', async (req, res) => {
         const recordId = req.body.recordId;
         const status = req.body.status;
         const autoService = await AutoService.findOne({_id: autoServiceId});
-
         if(autoService){
             const dayIndex = autoService.days.findIndex(day => new Date(day.dayDate).getTime() === date.getTime())
             console.log(dayIndex);
             if(dayIndex != -1){
                 const record = autoService.days[dayIndex].records.id(recordId);
                 if(record) {
-                    if(status){
-                        record.status = status;
-                    } else {
-                        if(record.status === "Новый") {
-                            record.status = "В работе";
-                        } else if (record.status === "В работе") {
-                            record.status = "Ждет клиента";
-                        } else if (record.status === "Ждет клиента") {
-                            record.status = "Новый";
-                        }
-                    }
-
+                    record.status = status;
                     autoService.days[dayIndex].records = autoService.days[dayIndex].records.filter(r => r.status !== "Закрыт");
                     autoService.days = autoService.days.filter(day => day.records.length > 0);
 
@@ -333,6 +335,17 @@ app.post("/updateClient", async (req, res) => {
     }
 })
 
+app.post('/loadOptions', async(req, res) => {
+    const autoServiceId = req.body.autoServiceId
+    const autoService = await AutoService.findOne({_id: autoServiceId})
+    if(autoService){
+        const options = await autoService.options;
+        console.log(options);
+        res.status(200).json(options);
+    } else {
+        res.status(401).json({message: "Автосервис не найден!"})
+    }
+})
 
 
 

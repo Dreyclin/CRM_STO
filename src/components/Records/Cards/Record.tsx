@@ -15,14 +15,17 @@ interface RecordProps {
 }
 
 const Record: React.FC<RecordProps> = ({duration, car, description, status, id, client, day}) => {
-    const {getBadgeClass, handleStatusClick} = useRecordStatus();
+    const {getBadgeClass, handleStatusClick, options, isOptionsOpen, toggleOptions} = useRecordStatus();
 
     return (
         <div className="card w-25">
             <div className="card-header d-flex align-items-center justify-content-between">
                 <h5 className="mb-0">{duration.from}:00-{duration.to}:00</h5>
                 <div className="badges d-flex gap-2">
-                    <div className={getBadgeClass(status)} onClick={() => handleStatusClick(id, null, day)}>{status}</div>
+                    <div className={getBadgeClass(status)} onClick={() => toggleOptions()}>{status}</div>
+                    <div className="d-flex flex-column record-status">
+                    {(options.options && isOptionsOpen) && options.options.statusWorkOptions.map(option => <div className="status-item p-2" onClick={() => {handleStatusClick(id, option, day); toggleOptions()}}>{option}</div>)}
+                    </div>
                     {/* <div className="badge bg-primary">Подъемник</div> */}
                 </div>
    

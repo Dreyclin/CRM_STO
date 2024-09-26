@@ -1,10 +1,20 @@
 import { RecordCredentials } from "../features/records/recordsTypes";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../app/store";
 import { changeStatus } from "../features/records/recordsThunks";
+import { useEffect, useState } from "react";
+import { loadOptions } from "../features/options/optionsThunks";
+import { AutoServiceCredentials } from "../features/models/autoServiceModel";
 
 export const useRecordStatus = () => {
     const dispatch: AppDispatch = useDispatch();
+    const options = useSelector((state: RootState) => state.options)
+
+    const [isOptionsOpen, setIsOptionsOpen] = useState<boolean>(false);
+
+    const toggleOptions = () => {
+        setIsOptionsOpen(!isOptionsOpen);
+    }
 
     const handleStatusClick = (id: string, status: string | null, day: Date | null) => {
         console.log(status);
@@ -19,7 +29,14 @@ export const useRecordStatus = () => {
             alert(err);
         })
     };
-
+    useEffect(() => {
+        const credentials : AutoServiceCredentials = {
+            autoServiceId: localStorage.getItem("autoServiceId")
+        }
+        dispatch(loadOptions(credentials)).catch(err => {
+            alert(err);
+        })
+    }, [dispatch])
     const getBadgeClass = (status: string) => {
         switch (status) {
             case "Новый":
@@ -34,7 +51,10 @@ export const useRecordStatus = () => {
     };
 
     return {
+        getBadgeClass,
         handleStatusClick,
-        getBadgeClass
+        isOptionsOpen,
+        options,
+        toggleOptions
     };
 };
