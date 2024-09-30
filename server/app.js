@@ -37,6 +37,10 @@ const recordSchema = mongoose.Schema({
     clientId: String,
     car: String,
     carNumber: String,
+    services: [{
+        service: String,
+        cost: Number
+    }],
     description: String,
     date: Date,
     duration: {
@@ -50,6 +54,13 @@ const optionsSchema = mongoose.Schema({
     statusWorkOptions: {
         type: [String],
         default: ["Новый", "В работе", "Ждет клиента"]
+    },
+    servicesOptions: {
+        type: [{
+            service: String,
+            cost: Number
+        }],
+        default: [{service: null, cost: null}]
     }
 })
 

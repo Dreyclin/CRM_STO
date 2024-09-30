@@ -20,7 +20,7 @@ export const useRecordsModal = () => {
     const clients = useSelector((state: RootState) => state.client.clients)
     const [selectedClient, setSelectedClient] = useState<Client | null>();
     const [clientDropdown, setClientDropdown] = useState<boolean>(false);
-    
+    const [numberOfServices, setNumberOfServices] = useState<number>(1);
     const [filteredClients, setFilteredClients] = useState<Client[]>([]);
 
 
@@ -117,8 +117,8 @@ export const useRecordsModal = () => {
         }
     };
 
-    return {dateInputRef, clientDropdownRef, toggle, clients: filteredClients, selectedClient, clientDropdown, client, markModel, numbers, description, date, from, to,
-        setSelectedClient, setClientDropdown, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
+    return {dateInputRef, clientDropdownRef, toggle, clients: filteredClients, selectedClient, numberOfServices, clientDropdown, client, markModel, numbers, description, date, from, to,
+        setSelectedClient, setClientDropdown, setClient, setNumberOfServices, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
     }
 
 }

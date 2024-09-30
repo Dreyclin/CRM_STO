@@ -41,7 +41,7 @@ li:not(.active):hover {
 
 .modal-content {
     width: 30%;
-    height: 57%;
+    height: auto;
 }
 
 .w-80 {

@@ -5,10 +5,10 @@ interface ModalRecordsProps {
     toggleClientModal: () => void
 }
 
-const ModalContent: React.FC<ModalRecordsProps> = ({toggleClientModal}) => {
+const ModalContent: React.FC<ModalRecordsProps> = ({ toggleClientModal }) => {
 
-    const {dateInputRef, clientDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
-        setSelectedClient, setClientDropdown, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
+    const { dateInputRef, clientDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
+        setSelectedClient, setClientDropdown, numberOfServices, setNumberOfServices, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
     } = useRecordsModal()
 
     return (
@@ -19,29 +19,39 @@ const ModalContent: React.FC<ModalRecordsProps> = ({toggleClientModal}) => {
                         <span className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people-fill" viewBox="0 0 16 16">
                             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
                         </svg></span>
-                        <input type="text" placeholder="Клиент(поиск по номеру телефона)" className="form-control" required value={client} onChange={(e) => {setClient(e.target.value); setSelectedClient(undefined)}} onFocus={(e) => {setClientDropdown(true)}}/>
-                        {clientDropdown && 
-                        <div className="client-block" ref={clientDropdownRef}>
-                           {clients && clients.map((client, index) => {
-                                return <div key={index} className="client-item p-2 d-flex align-items-center justify-content-around" onClick={() => setSelectedClient(client)}>
-                                    <p>{client.name}</p>
-                                    <div className="numbers">
-                                        {client.phoneNumber && client.phoneNumber.map(number => <p>{number}</p>)}
+                        <input type="text" placeholder="Клиент(поиск по номеру телефона)" className="form-control" required value={client} onChange={(e) => { setClient(e.target.value); setSelectedClient(undefined) }} onFocus={(e) => { setClientDropdown(true) }} />
+                        {clientDropdown &&
+                            <div className="client-block" ref={clientDropdownRef}>
+                                {clients && clients.map((client, index) => {
+                                    return <div key={index} className="client-item p-2 d-flex align-items-center justify-content-around" onClick={() => setSelectedClient(client)}>
+                                        <p>{client.name}</p>
+                                        <div className="numbers">
+                                            {client.phoneNumber && client.phoneNumber.map(number => <p>{number}</p>)}
+                                        </div>
                                     </div>
-                                </div>
-                           })}
-                        </div>}
+                                })}
+                            </div>}
                     </div>
                     <div className="d-flex gap-2">
                         <button className="btn btn-success fw-bold" onClick={() => toggleClientModal()}>+</button>
-                        <button className="btn btn-primary fw-bold" onClick={() => {setClient("К.П."); setSelectedClient(null)}}>К.П.</button>
+                        <button className="btn btn-primary fw-bold" onClick={() => { setClient("К.П."); setSelectedClient(null) }}>К.П.</button>
                     </div>
                 </div>
                 <div className="d-flex justify-content-between gap-3 w-100">
                     <input type="text" className="form-control" placeholder="Марка и модель" required value={markModel} onChange={(e) => setMarkModel(e.target.value)} />
                     <input type="text" className="form-control" placeholder="Номерной знак" required value={numbers} onChange={(e) => setNumbers(e.target.value)} />
                 </div>
-
+                <div className="d-flex gap-3 align-items-start">
+                    <div className="services-container d-flex flex-column gap-2">
+                        {[...Array(numberOfServices)].map((_, index) => (
+                            <div key={index} className="d-flex gap-3 mb-2">
+                                <input type="text" placeholder="Выберите услугу" className="form-control" />
+                                <input type="text" placeholder="Цена" className="form-control w-50" />
+                            </div>
+                        ))}
+                    </div>
+                    <button className="btn btn-success fw-bold" onClick={() => setNumberOfServices(numberOfServices + 1)}>+</button>
+                </div>
                 <div className="w-100">
                     <textarea name="" id="" className="form-control" placeholder="Описание" rows={5} required value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
                 </div>
