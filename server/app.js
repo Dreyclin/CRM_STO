@@ -38,9 +38,10 @@ const recordSchema = mongoose.Schema({
     car: String,
     carNumber: String,
     services: [{
-        service: String,
+        serviceName: String,
         cost: Number
     }],
+    finalCost: Number,
     description: String,
     date: Date,
     duration: {
@@ -60,7 +61,7 @@ const optionsSchema = mongoose.Schema({
             service: String,
             cost: Number
         }],
-        default: [{service: null, cost: null}]
+        default: []
     }
 })
 
@@ -81,7 +82,7 @@ const autoServiceSchema = mongoose.Schema({
         type: optionsSchema,
         default: {
             statusWorkOptions: ["Новый", "В работе", "Ждет клиента"],
-            servicesOptions: [{}]
+            servicesOptions: []
         }
     }
 })
@@ -389,6 +390,33 @@ app.post('/addStatusRecord', async(req, res) => {
    
 })
 
+app.post('/addService', async(req, res) => {
+    // try {
+        const autoServiceId = req.body.autoServiceId;
+        const newService = {
+            service: req.body.service.serviceName,
+            cost: req.body.service.cost
+        };
+        const autoService = await AutoService.findOne({_id: autoServiceId})
+    
+        if(autoService){
+            const serviceOptions = await autoService.options.servicesOptions;
+            console.log(serviceOptions)
+            if(serviceOptions){
+                serviceOptions.push(newService);
+    
+                await autoService.save()
+                res.status(200).json(autoService.options)
+            } else {
+                res.status(401).json({message: "Не найдено!"})
+            }
+        } else {
+            res.status(401).json({message: "Автосервис не найден!"})
+        }
+    // } catch (error) {
+    //     res.status(500).json({message: "Ошибка на сервере"})
+    // }
+})
 
 
 app.post('/insertAutoservice/:name', async (req, res) => {

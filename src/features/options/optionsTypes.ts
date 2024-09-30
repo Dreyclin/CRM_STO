@@ -10,6 +10,13 @@ export interface NewStatusCreds extends AutoServiceCredentials {
     status: string
 }
 
+export interface NewServiceCreds extends AutoServiceCredentials {
+    service: {
+        serviceName: string,
+        cost: number
+    }
+}
+
 export interface Options {
     statusWorkOptions: string[]
 }
