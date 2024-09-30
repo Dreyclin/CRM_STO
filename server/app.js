@@ -80,7 +80,8 @@ const autoServiceSchema = mongoose.Schema({
     options: {
         type: optionsSchema,
         default: {
-            statusWorkOptions: ["Новый", "В работе", "Ждет клиента"]
+            statusWorkOptions: ["Новый", "В работе", "Ждет клиента"],
+            servicesOptions: [{}]
         }
     }
 })
@@ -347,15 +348,45 @@ app.post("/updateClient", async (req, res) => {
 })
 
 app.post('/loadOptions', async(req, res) => {
-    const autoServiceId = req.body.autoServiceId
-    const autoService = await AutoService.findOne({_id: autoServiceId})
-    if(autoService){
-        const options = await autoService.options;
-        console.log(options);
-        res.status(200).json(options);
-    } else {
-        res.status(401).json({message: "Автосервис не найден!"})
+    try {
+        const autoServiceId = req.body.autoServiceId
+        const autoService = await AutoService.findOne({_id: autoServiceId})
+        if(autoService){
+            const options = await autoService.options;
+            console.log(options);
+            res.status(200).json(options);
+        } else {
+            res.status(401).json({message: "Автосервис не найден!"})
+        }
+    } catch (error) {
+        res.status(500).json({message: "Ошибка на сервере!"})
     }
+})
+
+app.post('/addStatusRecord', async(req, res) => {
+    try {
+        const autoServiceId = req.body.autoServiceId;
+        const newOption = req.body.status;
+        const autoService = await AutoService.findOne({_id: autoServiceId})
+    
+        if(autoService){
+            const statusWorkOptions = await autoService.options.statusWorkOptions;
+    
+            if(statusWorkOptions){
+                statusWorkOptions.push(newOption);
+    
+                await autoService.save()
+                res.status(200).json(autoService.options)
+            } else {
+                res.status(401).json({message: "Не найдено!"})
+            }
+        } else {
+            res.status(401).json({message: "Автосервис не найден!"})
+        }
+    } catch (error) {
+        res.status(500).json({message: "Ошибка на сервере"})
+    }
+   
 })
 
 

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { OptionsState } from "./optionsTypes";
-import { loadOptions } from "./optionsThunks";
+import { addStatusRecord, loadOptions } from "./optionsThunks";
 
 
 const initialState : OptionsState = {
@@ -23,6 +23,19 @@ const optionsSlice = createSlice({
             state.status = 'succeeded'
         })
         .addCase(loadOptions.rejected, (state, action) => {
+            if(action.payload)
+                state.error = action.payload as string
+            else
+                state.error = "Something went wrong!"
+        })
+        .addCase(addStatusRecord.pending, state => {
+            state.status = 'loading'
+        })
+        .addCase(addStatusRecord.fulfilled, (state, action) => {
+            state.options = action.payload
+            state.status = 'succeeded'
+        })
+        .addCase(addStatusRecord.rejected, (state, action) => {
             if(action.payload)
                 state.error = action.payload as string
             else
