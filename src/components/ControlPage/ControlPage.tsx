@@ -13,6 +13,7 @@ import ModalHeader from "../Records/Modal/ModalHeader";
 import ModalContent from "../Records/Modal/ModalContent";
 import ClientsModal from "../Clients/ClientsModal";
 import { Client } from "../../features/clients/clientsTypes";
+import Options from "../Options/Options";
 
 const ControlPage: React.FC = () => {
     const [title, setTitle] = useState('Запись')
@@ -49,6 +50,7 @@ const ControlPage: React.FC = () => {
                     <List navChange={handleTitleChange} activeTab={title} />
                     {title === "Запись" ? <Records /> : null}
                     {title === "Клиенты" ? <Clients onEditClient={handleEditClient}/> : null}
+                    {title === "Настройки" && <Options />}
                 </div>
                 {(title === "Запись" && !isClientsModalOpen) && <Modal isOpen={isOpen} toggle={toggle}>
                     <ModalHeader modalTitle="Записать"/>

@@ -24,7 +24,7 @@ const List: React.FC<IList> = ({navChange, activeTab}) => {
             <ul className="list-group">
                 <li className={`list-group-item ${activeTab === "Запись" ? 'active' : ""}`} onClick={(e) => navChange(e)}>Запись</li>
                 <li className={`list-group-item ${activeTab === "Клиенты" ? 'active' : ""}`} onClick={(e) => navChange(e)}>Клиенты</li>
-                <li className="list-group-item">Настройки</li>
+                <li className={`list-group-item ${activeTab === "Настройки" ? 'active' : ""}`} onClick={(e) => navChange(e)}>Настройки</li>
                 <li className="list-group-item" onClick={handleLogOut}>Выйти</li>
             </ul>
         </div>
