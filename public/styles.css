@@ -64,7 +64,8 @@ textarea {
     resize: none
 }
 
-.client-block {
+.client-block,
+.services-block {
     background-color: #fff;
     border: 1px solid black;
     border-radius: 5px!important;
@@ -74,11 +75,17 @@ textarea {
     top: 100%;
 }
 
-.client-item:not(:last-child) {
+.service-input {
+    position: relative;
+}
+
+.client-item:not(:last-child),
+.service-item:not(:last-child) {
     border-bottom: 1px solid black;
 }
 
-.client-item:hover {
+.client-item:hover,
+.service-item:hover {
     cursor: pointer;
     background-color: #d8d8d8;
 }

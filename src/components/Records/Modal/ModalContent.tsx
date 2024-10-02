@@ -7,10 +7,11 @@ interface ModalRecordsProps {
 
 const ModalContent: React.FC<ModalRecordsProps> = ({ toggleClientModal }) => {
 
-    const { dateInputRef, clientDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
-        setSelectedClient, setClientDropdown, numberOfServices, setNumberOfServices, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
+    const { dateInputRef, clientDropdownRef, options, servicesDropdown, servicesDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
+        setSelectedClient, setClientDropdown, numberOfServices, setNumberOfServices, setClient, setServiceDropdown, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
     } = useRecordsModal()
 
+    console.log();
     return (
         <div className="">
             <div className="py-3 d-flex flex-column justify-content-center align-items-center w-80 px-3 gap-3">
@@ -42,10 +43,19 @@ const ModalContent: React.FC<ModalRecordsProps> = ({ toggleClientModal }) => {
                     <input type="text" className="form-control" placeholder="Номерной знак" required value={numbers} onChange={(e) => setNumbers(e.target.value)} />
                 </div>
                 <div className="d-flex gap-3 align-items-start">
-                    <div className="services-container d-flex flex-column gap-2">
+                    <div className="services-container d-flex flex-column gap-2 ">
                         {[...Array(numberOfServices)].map((_, index) => (
-                            <div key={index} className="d-flex gap-3 mb-2">
-                                <input type="text" placeholder="Выберите услугу" className="form-control" />
+                            <div key={index} className="d-flex gap-3 mb-2 service-input">
+                                <input type="text" placeholder="Выберите услугу" className="form-control" readOnly onFocus={() => setServiceDropdown(true)}/>
+                                {servicesDropdown && 
+                                    <div className="services-block" ref={servicesDropdownRef}>
+                                        {options.options?.servicesOptions && options.options.servicesOptions.map(service => (
+                                            <div className="service-item p-2 d-flex align-items-center">
+                                                {service.service} - {service.cost}
+                                            </div>
+                                        ))}
+                                    </div>
+                                }
                                 <input type="text" placeholder="Цена" className="form-control w-50" />
                             </div>
                         ))}

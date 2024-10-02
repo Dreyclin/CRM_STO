@@ -18,5 +18,9 @@ export interface NewServiceCreds extends AutoServiceCredentials {
 }
 
 export interface Options {
-    statusWorkOptions: string[]
+    statusWorkOptions: string[],
+    servicesOptions: [{
+        service: string,
+        cost: number
+    }]
 }

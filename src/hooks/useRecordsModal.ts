@@ -13,7 +13,7 @@ export const useRecordsModal = () => {
 
     const dateInputRef = useRef<HTMLInputElement>(null);
     const clientDropdownRef = useRef<HTMLDivElement>(null);
-
+    const servicesDropdownRef = useRef<HTMLDivElement>(null)
     const dispatch: AppDispatch = useDispatch();
 
     const { toggle } = useModal();
@@ -22,7 +22,8 @@ export const useRecordsModal = () => {
     const [clientDropdown, setClientDropdown] = useState<boolean>(false);
     const [numberOfServices, setNumberOfServices] = useState<number>(1);
     const [filteredClients, setFilteredClients] = useState<Client[]>([]);
-
+    const [servicesDropdown, setServiceDropdown] = useState<boolean>(false);
+    const options = useSelector((state: RootState) => state.options)
 
     const [client, setClient] = useState<string>('');
     const [markModel, setMarkModel] = useState<string>('');
@@ -46,6 +47,9 @@ export const useRecordsModal = () => {
         const handleClickOutside = (event: MouseEvent) => {
             if (clientDropdownRef.current && !clientDropdownRef.current.contains(event.target as Node)) {
                 setClientDropdown(false);
+            }
+            if(servicesDropdownRef.current && !servicesDropdownRef.current.contains(event.target as Node)) {
+                setServiceDropdown(false);
             }
         };
 
@@ -117,8 +121,8 @@ export const useRecordsModal = () => {
         }
     };
 
-    return {dateInputRef, clientDropdownRef, toggle, clients: filteredClients, selectedClient, numberOfServices, clientDropdown, client, markModel, numbers, description, date, from, to,
-        setSelectedClient, setClientDropdown, setClient, setNumberOfServices, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
+    return {dateInputRef, clientDropdownRef, options, servicesDropdown, servicesDropdownRef, toggle, clients: filteredClients, selectedClient, numberOfServices, clientDropdown, client, markModel, numbers, description, date, from, to,
+        setSelectedClient, setClientDropdown, setClient, setNumberOfServices, setServiceDropdown, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
     }
 
 }
