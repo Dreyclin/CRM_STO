@@ -41,6 +41,7 @@ const recordSchema = mongoose.Schema({
         serviceName: String,
         cost: Number
     }],
+    totalCost: {type: Number, default: 0},
     finalCost: Number,
     description: String,
     date: Date,
@@ -207,6 +208,44 @@ app.post('/changeStatus', async (req, res) => {
     }
 
 })
+
+app.post('/setService', async (req, res) => {
+    try {
+        const autoServiceId = req.body.autoServiceId;
+        const date = new Date(req.body.day);
+        const recordId = req.body.recordId;
+    
+        const autoService = await AutoService.findOne({ _id: autoServiceId });
+        if (autoService) {
+            const dayIndex = autoService.days.findIndex(day => new Date(day.dayDate).getTime() === date.getTime());
+            if (dayIndex !== -1) {
+                const record = autoService.days[dayIndex].records.id(recordId);
+                if (record) {
+                    const serviceDescription = `${req.body.service.serviceName} - ${req.body.service.cost}`;
+                    record.description = record.description
+                        ? `${record.description}\n${serviceDescription}`
+                        : serviceDescription;
+
+                    const currentTotalCost = record.totalCost || 0;
+                    record.totalCost = currentTotalCost + req.body.service.cost;
+                    
+                    autoService.days[dayIndex].records = autoService.days[dayIndex].records.filter(r => r.status !== "Закрыт");
+                    autoService.days = autoService.days.filter(day => day.records.length > 0);
+                    await autoService.save();
+                    res.status(200).json(autoService.days);
+                } else {
+                    res.status(400).json({ message: "Запись не найдена!" });
+                }
+            } else {
+                res.status(400).json({ message: "День не найден!" });
+            }
+        } else {
+            res.status(400).json({ message: "Автосервис не найден!" });
+        }
+    } catch (error) {
+        res.status(401).json({ message: "Ошибка на сервере" });
+    }
+    });
 
 app.post("/addRecord", async (req, res) => {
     try {

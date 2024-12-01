@@ -7,8 +7,8 @@ interface ModalRecordsProps {
 
 const ModalContent: React.FC<ModalRecordsProps> = ({ toggleClientModal }) => {
 
-    const { dateInputRef, clientDropdownRef, options, servicesDropdown, servicesDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
-        setSelectedClient, setClientDropdown, numberOfServices, setNumberOfServices, setClient, setServiceDropdown, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
+    const { dateInputRef, clientDropdownRef, toggle, clients, clientDropdown, client, markModel, numbers, description, date, from, to,
+        setSelectedClient, setClientDropdown, setClient, setMarkModel, setNumbers, setDescription, setFrom, setTo, handleCalendar, handleSubmit, handleDateChange
     } = useRecordsModal()
 
     console.log();
@@ -41,26 +41,6 @@ const ModalContent: React.FC<ModalRecordsProps> = ({ toggleClientModal }) => {
                 <div className="d-flex justify-content-between gap-3 w-100">
                     <input type="text" className="form-control" placeholder="Марка и модель" required value={markModel} onChange={(e) => setMarkModel(e.target.value)} />
                     <input type="text" className="form-control" placeholder="Номерной знак" required value={numbers} onChange={(e) => setNumbers(e.target.value)} />
-                </div>
-                <div className="d-flex gap-3 align-items-start">
-                    <div className="services-container d-flex flex-column gap-2 ">
-                        {[...Array(numberOfServices)].map((_, index) => (
-                            <div key={index} className="d-flex gap-3 mb-2 service-input">
-                                <input type="text" placeholder="Выберите услугу" className="form-control" readOnly onFocus={() => setServiceDropdown(true)}/>
-                                {servicesDropdown && 
-                                    <div className="services-block" ref={servicesDropdownRef}>
-                                        {options.options?.servicesOptions && options.options.servicesOptions.map(service => (
-                                            <div className="service-item p-2 d-flex align-items-center">
-                                                {service.service} - {service.cost}
-                                            </div>
-                                        ))}
-                                    </div>
-                                }
-                                <input type="text" placeholder="Цена" className="form-control w-50" />
-                            </div>
-                        ))}
-                    </div>
-                    <button className="btn btn-success fw-bold" onClick={() => setNumberOfServices(numberOfServices + 1)}>+</button>
                 </div>
                 <div className="w-100">
                     <textarea name="" id="" className="form-control" placeholder="Описание" rows={5} required value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
